@@ -1,0 +1,1569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>spider-man birthday mission 🕷️</title>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;overflow:hidden;background:#03050d}
+body{font-family:Arial,sans-serif;color:#fff;touch-action:none}
+
+button{font:inherit;border:0;color:white;cursor:pointer}
+
+#game{
+  position:fixed;
+  inset:0;
+  overflow:hidden;
+  background:#050a18;
+}
+
+.hidden{display:none!important}
+
+/* SKY */
+
+.sky{
+  position:absolute;
+  inset:0;
+  background:
+    radial-gradient(circle at 50% 25%,#243c70 0,#0b1730 38%,#02040b 78%);
+}
+
+.moon{
+  position:absolute;
+  width:90px;height:90px;
+  border-radius:50%;
+  right:12%;top:10%;
+  background:#dce8ff;
+  box-shadow:0 0 45px #8baeff;
+}
+
+.stars{
+  position:absolute;
+  inset:0;
+  background-image:
+    radial-gradient(circle,#fff 1px,transparent 2px);
+  background-size:65px 65px;
+  opacity:.35;
+}
+
+/* CITY */
+
+.city{
+  position:absolute;
+  bottom:0;
+  left:0;
+  width:220%;
+  height:43%;
+  display:flex;
+  align-items:flex-end;
+  gap:8px;
+  animation:city 25s linear infinite;
+}
+
+@keyframes city{
+  from{transform:translateX(0)}
+  to{transform:translateX(-50%)}
+}
+
+.building{
+  position:relative;
+  width:65px;
+  flex:none;
+  background:linear-gradient(#172744,#07101f);
+  border:1px solid #253657;
+}
+
+.building:nth-child(1){height:75%}
+.building:nth-child(2){height:55%}
+.building:nth-child(3){height:88%}
+.building:nth-child(4){height:63%}
+.building:nth-child(5){height:95%}
+.building:nth-child(6){height:70%}
+.building:nth-child(7){height:48%}
+.building:nth-child(8){height:82%}
+.building:nth-child(9){height:60%}
+.building:nth-child(10){height:91%}
+
+.building:after{
+  content:"";
+  position:absolute;
+  inset:15px 10px;
+  background:
+    repeating-linear-gradient(
+      0deg,
+      transparent 0 18px,
+      #ffd76b 19px 22px
+    );
+  opacity:.28;
+}
+
+/* SCREENS */
+
+.screen{
+  position:absolute;
+  inset:0;
+  z-index:20;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+}
+
+.card{
+  width:min(430px,100%);
+  background:rgba(4,9,20,.92);
+  border:1px solid #31405e;
+  border-radius:24px;
+  padding:28px;
+  text-align:center;
+  box-shadow:0 20px 80px #000;
+}
+
+.spider{
+  font-size:75px;
+  animation:float 2s ease-in-out infinite;
+  filter:drop-shadow(0 0 20px #e31d3b);
+}
+
+@keyframes float{
+  50%{transform:translateY(-9px)}
+}
+
+h1{
+  font-size:29px;
+  letter-spacing:2px;
+  margin:12px 0;
+}
+
+.red{color:#f32242}
+
+.muted{
+  color:#aeb9cc;
+  line-height:1.6;
+}
+
+.mainBtn{
+  width:100%;
+  padding:15px;
+  margin-top:20px;
+  border-radius:13px;
+  background:linear-gradient(135deg,#ed173c,#8e071e);
+  font-weight:bold;
+}
+
+/* HUD */
+
+#hud{
+  position:absolute;
+  z-index:50;
+  top:0;left:0;right:0;
+  padding:12px;
+  display:flex;
+  justify-content:space-between;
+  pointer-events:none;
+}
+
+.hud{
+  background:#050a16dd;
+  border:1px solid #263451;
+  border-radius:12px;
+  padding:7px 10px;
+  font-size:12px;
+}
+
+.bar{
+  width:100px;
+  height:5px;
+  margin-top:4px;
+  background:#202a3e;
+  border-radius:10px;
+}
+
+.bar i{
+  display:block;
+  width:0;
+  height:100%;
+  background:#ed173c;
+}
+
+/* MAP */
+
+#map{
+  position:absolute;
+  inset:0;
+  z-index:10;
+}
+
+.mapTitle{
+  position:absolute;
+  top:70px;
+  width:100%;
+  text-align:center;
+}
+
+.mapTitle small{
+  color:#8491aa;
+}
+
+.map{
+  position:absolute;
+  inset:130px 20px 30px;
+}
+
+.node{
+  position:absolute;
+  width:75px;height:75px;
+  border-radius:50%;
+  background:#091327;
+  border:2px solid #ef2344;
+  box-shadow:0 0 20px #ef234466;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:3px;
+}
+
+.node small{font-size:8px}
+.node.locked{opacity:.25;filter:grayscale(1)}
+
+.n1{left:5%;top:10%}
+.n2{left:45%;top:2%}
+.n3{right:5%;top:23%}
+.n4{left:20%;top:45%}
+.n5{right:20%;top:57%}
+.n6{left:45%;bottom:2%}
+
+/* MISSIONS */
+
+.mission{
+  position:absolute;
+  inset:0;
+  z-index:15;
+}
+
+.title{
+  position:absolute;
+  top:65px;
+  width:100%;
+  text-align:center;
+  z-index:20;
+}
+
+.title h2{font-size:22px}
+.title p{font-size:11px;color:#aab5c9;margin-top:5px}
+
+/* RUNNER */
+
+#runWorld{
+  position:absolute;
+  inset:0;
+  overflow:hidden;
+}
+
+.street{
+  position:absolute;
+  bottom:0;
+  width:100%;
+  height:30%;
+  background:#101827;
+  border-top:5px solid #32425e;
+}
+
+.road{
+  position:absolute;
+  bottom:7%;
+  width:100%;
+  height:3px;
+  background:#ffd75e;
+  box-shadow:0 35px #ffd75e;
+  opacity:.5;
+}
+
+.runBuildings{
+  position:absolute;
+  bottom:30%;
+  height:35%;
+  width:250%;
+  display:flex;
+  align-items:flex-end;
+  gap:6px;
+  animation:runCity 9s linear infinite;
+}
+
+@keyframes runCity{
+  to{transform:translateX(-50%)}
+}
+
+.runBuilding{
+  width:90px;
+  height:var(--h);
+  flex:none;
+  background:linear-gradient(#182947,#07101d);
+  border:1px solid #30425f;
+  position:relative;
+}
+
+.runBuilding:after{
+  content:"";
+  position:absolute;
+  inset:12px;
+  background:
+  repeating-linear-gradient(
+    0deg,
+    transparent 0 17px,
+    #ffd86b 18px 21px
+  );
+  opacity:.25;
+}
+
+.player{
+  position:absolute;
+  left:18%;
+  bottom:30%;
+  width:48px;
+  height:70px;
+  z-index:10;
+  transition:bottom .12s;
+}
+
+.body{
+  position:absolute;
+  width:32px;height:45px;
+  left:8px;top:16px;
+  border-radius:14px 14px 8px 8px;
+  background:
+    radial-gradient(circle at 50% 38%,#fff 0 4%,transparent 5%),
+    radial-gradient(circle at 35% 35%,#fff 0 3%,transparent 4%),
+    #d7193f;
+  border:2px solid #700b21;
+}
+
+.head{
+  position:absolute;
+  width:31px;height:31px;
+  left:9px;top:0;
+  border-radius:50%;
+  background:#d7193f;
+  border:2px solid #700b21;
+}
+
+.eye{
+  position:absolute;
+  width:7px;height:11px;
+  background:white;
+  top:9px;
+  border-radius:50%;
+}
+
+.eye.a{left:6px}
+.eye.b{right:6px}
+
+.arm,.leg{
+  position:absolute;
+  width:9px;
+  border-radius:8px;
+  background:#d7193f;
+  border:1px solid #700b21;
+  transform-origin:top;
+}
+
+.arm{height:35px;top:19px}
+.arm.a{left:3px;transform:rotate(35deg)}
+.arm.b{right:3px;transform:rotate(-35deg)}
+.leg{height:35px;top:55px}
+.leg.a{left:10px;transform:rotate(15deg)}
+.leg.b{right:10px;transform:rotate(-15deg)}
+
+.runnerObstacle{
+  position:absolute;
+  bottom:30%;
+  width:45px;height:55px;
+  background:#252e43;
+  border:2px solid #ef2344;
+  border-radius:7px;
+}
+
+.coin{
+  position:absolute;
+  width:22px;height:22px;
+  border-radius:50%;
+  background:#ffd43b;
+  color:#111;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:11px;
+}
+
+.people{
+  position:absolute;
+  bottom:30%;
+  z-index:3;
+  font-size:24px;
+  letter-spacing:8px;
+  opacity:.75;
+  white-space:nowrap;
+  animation:people 5s linear infinite;
+}
+
+@keyframes people{
+  to{transform:translateX(-300px)}
+}
+
+/* CONTROLS */
+
+.controls{
+  position:absolute;
+  z-index:30;
+  bottom:20px;
+  left:0;right:0;
+  display:flex;
+  justify-content:center;
+  gap:12px;
+}
+
+.ctrl{
+  min-width:82px;
+  min-height:50px;
+  border-radius:14px;
+  background:#101a2eec;
+  border:1px solid #40516f;
+}
+
+/* SWING */
+
+#swingWorld{
+  position:absolute;
+  inset:0;
+}
+
+.anchor{
+  position:absolute;
+  width:18px;height:18px;
+  border-radius:50%;
+  background:white;
+  box-shadow:0 0 25px #fff;
+}
+
+.swingPlayer{
+  position:absolute;
+  left:12%;top:65%;
+  font-size:42px;
+  transition:all .3s ease;
+}
+
+/* AIM */
+
+#aimWorld{
+  position:absolute;
+  inset:0;
+}
+
+.target{
+  position:absolute;
+  width:58px;height:58px;
+  border:3px solid #ef2344;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:20px;
+  animation:pulse .8s infinite;
+}
+
+@keyframes pulse{
+  50%{transform:scale(1.12)}
+}
+
+/* PUZZLE */
+
+.puzzleBox{
+  position:absolute;
+  width:min(340px,88%);
+  height:340px;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-45%);
+  border:1px solid #34445f;
+  border-radius:20px;
+  background:#071022dd;
+}
+
+.dot{
+  position:absolute;
+  width:42px;height:42px;
+  border-radius:50%;
+  background:#111e36;
+  border:2px solid #ef2344;
+  color:white;
+}
+
+.dot.done{
+  background:#ef2344;
+}
+
+/* SAVE */
+
+#saveWorld{
+  position:absolute;
+  inset:0;
+}
+
+.energy{
+  position:absolute;
+  left:15%;
+  top:40%;
+  font-size:45px;
+  transition:.35s;
+}
+
+.safe{
+  position:absolute;
+  right:15%;
+  top:35%;
+  width:130px;height:130px;
+  border:3px dashed #4fe9ff;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+}
+
+/* FINAL */
+
+.finalCore{
+  position:absolute;
+  left:50%;top:48%;
+  width:140px;height:140px;
+  transform:translate(-50%,-50%);
+  border-radius:50%;
+  background:radial-gradient(circle,#fff 0 5%,#ef2344 6% 35%,#19050a 36%);
+  box-shadow:0 0 60px #ef2344;
+}
+
+.finalEnemy{
+  position:absolute;
+  font-size:60px;
+  transition:.15s;
+}
+
+/* POPUP */
+
+#popup{
+  position:absolute;
+  inset:0;
+  z-index:100;
+  background:#000b;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+}
+
+.popup{
+  width:min(390px,100%);
+  background:#071022;
+  border:1px solid #3a4b6a;
+  border-radius:22px;
+  padding:25px;
+  text-align:center;
+}
+
+.popup p{
+  color:#adb8ca;
+  line-height:1.6;
+  margin:12px 0;
+}
+
+/* LETTER */
+
+.letter{
+  max-width:420px;
+  max-height:80%;
+  overflow:auto;
+  background:#fffaf4;
+  color:#211b1b;
+  padding:28px;
+  border-radius:10px;
+  line-height:1.7;
+  box-shadow:0 20px 70px #000;
+}
+
+.letter h2{
+  color:#c90028;
+  margin-bottom:15px;
+}
+
+.confetti{
+  position:absolute;
+  top:-20px;
+  width:8px;height:14px;
+  animation:fall 3s linear forwards;
+}
+
+@keyframes fall{
+  to{transform:translateY(110vh) rotate(720deg)}
+}
+</style>
+</head>
+
+<body>
+
+<div id="game">
+
+<div class="sky"></div>
+<div class="moon"></div>
+<div class="stars"></div>
+
+<div class="city">
+  <div class="building"></div><div class="building"></div>
+  <div class="building"></div><div class="building"></div>
+  <div class="building"></div><div class="building"></div>
+  <div class="building"></div><div class="building"></div>
+  <div class="building"></div><div class="building"></div>
+  <div class="building"></div><div class="building"></div>
+</div>
+
+<!-- START -->
+
+<section id="start" class="screen">
+  <div class="card">
+    <div class="spider">🕷️</div>
+    <h1><span class="red">SPIDER</span> BIRTHDAY</h1>
+    <p class="muted">
+      a secret mission has appeared.<br>
+      someone needs to save the city...
+    </p>
+    <button class="mainBtn" id="startBtn">START MISSION</button>
+  </div>
+</section>
+
+<!-- HUD -->
+
+<div id="hud" class="hidden">
+  <div class="hud">❤️ <span id="lives">3</span></div>
+  <div class="hud">
+    LV <span id="level">1</span>
+    <div class="bar"><i id="xp"></i></div>
+  </div>
+  <div class="hud">🪙 <span id="tokens">0</span></div>
+</div>
+
+<!-- MAP -->
+
+<section id="map" class="hidden">
+
+  <div class="mapTitle">
+    <h1>THE CITY</h1>
+    <small>complete each mission to unlock the next</small>
+  </div>
+
+  <div class="map">
+
+    <button class="node n1" data-mission="run">
+      🏃<small>RUN</small>
+    </button>
+
+    <button class="node n2 locked" data-mission="swing">
+      🕸️<small>SWING</small>
+    </button>
+
+    <button class="node n3 locked" data-mission="aim">
+      🎯<small>AIM</small>
+    </button>
+
+    <button class="node n4 locked" data-mission="puzzle">
+      🧩<small>PUZZLE</small>
+    </button>
+
+    <button class="node n5 locked" data-mission="save">
+      🏙️<small>SAVE</small>
+    </button>
+
+    <button class="node n6 locked" data-mission="final">
+      🕷️<small>FINAL</small>
+    </button>
+
+  </div>
+</section>
+
+<!-- RUN -->
+
+<section id="run" class="mission hidden">
+
+  <div class="title">
+    <h2>ROOFTOP RUN</h2>
+    <p>jump over obstacles and collect 🪙</p>
+  </div>
+
+  <div id="runWorld">
+
+    <div class="runBuildings">
+      <div class="runBuilding" style="--h:60%"></div>
+      <div class="runBuilding" style="--h:80%"></div>
+      <div class="runBuilding" style="--h:55%"></div>
+      <div class="runBuilding" style="--h:90%"></div>
+      <div class="runBuilding" style="--h:65%"></div>
+      <div class="runBuilding" style="--h:75%"></div>
+      <div class="runBuilding" style="--h:50%"></div>
+      <div class="runBuilding" style="--h:85%"></div>
+    </div>
+
+    <div class="people">🚶 🚶 🧍 🚶 🧍 🚶 🚶 🧍 🚶</div>
+
+    <div class="street">
+      <div class="road"></div>
+    </div>
+
+    <div id="player" class="player">
+      <div class="head">
+        <i class="eye a"></i>
+        <i class="eye b"></i>
+      </div>
+      <div class="body"></div>
+      <div class="arm a"></div>
+      <div class="arm b"></div>
+      <div class="leg a"></div>
+      <div class="leg b"></div>
+    </div>
+
+  </div>
+
+  <div class="controls">
+    <button class="ctrl" id="jumpBtn">⬆ JUMP</button>
+    <button class="ctrl" id="dashBtn">🕸️ DASH</button>
+  </div>
+
+</section>
+
+<!-- SWING -->
+
+<section id="swing" class="mission hidden">
+
+  <div class="title">
+    <h2>WEB SWING</h2>
+    <p>tap the glowing anchors in order</p>
+  </div>
+
+  <div id="swingWorld">
+
+    <button class="anchor" style="left:20%;top:25%" data-a="0"></button>
+    <button class="anchor" style="left:48%;top:18%" data-a="1"></button>
+    <button class="anchor" style="left:75%;top:30%" data-a="2"></button>
+    <button class="anchor" style="left:57%;top:55%" data-a="3"></button>
+    <button class="anchor" style="left:84%;top:65%" data-a="4"></button>
+
+    <div id="swingPlayer" class="swingPlayer">🕷️</div>
+
+  </div>
+
+</section>
+
+<!-- AIM -->
+
+<section id="aim" class="mission hidden">
+
+  <div class="title">
+    <h2>WEB AIM</h2>
+    <p>hit 7 moving targets</p>
+  </div>
+
+  <div id="aimWorld"></div>
+
+</section>
+
+<!-- PUZZLE -->
+
+<section id="puzzle" class="mission hidden">
+
+  <div class="title">
+    <h2>WEB PUZZLE</h2>
+    <p>connect the numbers in order</p>
+  </div>
+
+  <div id="puzzleBox" class="puzzleBox"></div>
+
+</section>
+
+<!-- SAVE -->
+
+<section id="save" class="mission hidden">
+
+  <div class="title">
+    <h2>SAVE THE CITY</h2>
+    <p>pull the energy into the safe zone</p>
+  </div>
+
+  <div id="saveWorld">
+
+    <div id="energy" class="energy">💠</div>
+
+    <div class="safe">
+      SAFE<br>ZONE
+    </div>
+
+  </div>
+
+  <div class="controls">
+    <button class="ctrl" id="pullBtn">🕸️ PULL</button>
+  </div>
+
+</section>
+
+<!-- FINAL -->
+
+<section id="final" class="mission hidden">
+
+  <div class="title">
+    <h2>FINAL CHALLENGE</h2>
+    <p>hit the core when it becomes vulnerable</p>
+  </div>
+
+  <div class="finalCore" id="finalCore"></div>
+
+  <div id="enemy" class="finalEnemy">🕷️</div>
+
+  <div class="controls">
+    <button class="ctrl" id="hitBtn">🕸️ WEB HIT</button>
+  </div>
+
+</section>
+
+<!-- POPUP -->
+
+<div id="popup" class="hidden">
+  <div class="popup">
+    <h2 id="popTitle"></h2>
+    <p id="popText"></p>
+    <button class="mainBtn" id="popBtn"></button>
+  </div>
+</div>
+
+</div>
+
+<script>
+/* ================= STATE ================= */
+
+const state={
+  lives:3,
+  xp:0,
+  level:1,
+  tokens:0,
+  unlocked:["run"],
+  current:null,
+  run:false,
+  swing:false,
+  aim:false,
+  puzzle:false,
+  save:false,
+  final:false
+};
+
+const $=id=>document.getElementById(id);
+
+function updateHUD(){
+  $("lives").textContent=state.lives;
+  $("level").textContent=state.level;
+  $("tokens").textContent=state.tokens;
+  $("xp").style.width=(state.xp%100)+"%";
+
+  if(state.xp>=100){
+    state.level++;
+    state.xp-=100;
+  }
+}
+
+function gainXP(n){
+  state.xp+=n;
+  updateHUD();
+}
+
+function popup(title,text,button,fn){
+
+  $("popTitle").textContent=title;
+  $("popText").innerHTML=text;
+  $("popBtn").textContent=button;
+  $("popup").classList.remove("hidden");
+
+  $("popBtn").onclick=()=>{
+    $("popup").classList.add("hidden");
+    if(fn)fn();
+  };
+}
+
+function showMap(){
+
+  document.querySelectorAll(".mission").forEach(x=>x.classList.add("hidden"));
+  $("map").classList.remove("hidden");
+  state.current=null;
+
+}
+
+function unlock(name){
+
+  if(!state.unlocked.includes(name)){
+    state.unlocked.push(name);
+  }
+
+  document.querySelector(`[data-mission="${name}"]`)
+    ?.classList.remove("locked");
+
+}
+
+function loseLife(){
+
+  state.lives--;
+
+  updateHUD();
+
+  if(state.lives<=0){
+
+    state.lives=3;
+
+    popup(
+      "MISSION FAILED 💥",
+      "Don't worry. Spider-Man gets another try.",
+      "TRY AGAIN",
+      ()=>{
+        openMission(state.current);
+      }
+    );
+
+  }
+
+}
+
+/* ================= START ================= */
+
+$("startBtn").onclick=()=>{
+
+  $("start").classList.add("hidden");
+  $("hud").classList.remove("hidden");
+  $("map").classList.remove("hidden");
+
+  updateHUD();
+
+};
+
+/* ================= MAP ================= */
+
+document.querySelectorAll(".node").forEach(node=>{
+
+  node.onclick=()=>{
+
+    const mission=node.dataset.mission;
+
+    if(!state.unlocked.includes(mission))return;
+
+    openMission(mission);
+
+  };
+
+});
+
+function openMission(name){
+
+  $("map").classList.add("hidden");
+
+  document.querySelectorAll(".mission")
+    .forEach(x=>x.classList.add("hidden"));
+
+  $(name).classList.remove("hidden");
+
+  state.current=name;
+
+  if(name==="run")startRun();
+  if(name==="swing")startSwing();
+  if(name==="aim")startAim();
+  if(name==="puzzle")startPuzzle();
+  if(name==="save")startSave();
+  if(name==="final")startFinal();
+
+}
+
+/* ================= RUN ================= */
+
+let runFrame;
+let playerY=0;
+let velocity=0;
+let runX=100;
+
+function startRun(){
+
+  cancelAnimationFrame(runFrame);
+
+  const world=$("runWorld");
+
+  world.querySelectorAll(".runnerObstacle,.coin")
+    .forEach(x=>x.remove());
+
+  runX=100;
+
+  for(let i=0;i<8;i++){
+
+    const obstacle=document.createElement("div");
+
+    obstacle.className="runnerObstacle";
+
+    obstacle.style.left=(105+i*35)+"%";
+
+    world.appendChild(obstacle);
+
+  }
+
+  for(let i=0;i<12;i++){
+
+    const coin=document.createElement("div");
+
+    coin.className="coin";
+    coin.textContent="★";
+
+    coin.style.left=(120+i*28)+"%";
+    coin.style.bottom=(38+Math.random()*35)+"%";
+
+    world.appendChild(coin);
+
+  }
+
+  state.run=true;
+
+  runLoop();
+
+}
+
+function runLoop(){
+
+  if(!state.run)return;
+
+  runX-=.45;
+
+  document.querySelectorAll(".runnerObstacle,.coin")
+    .forEach(x=>{
+      const left=parseFloat(x.style.left);
+      x.style.left=(left-.45)+"%";
+    });
+
+  velocity-=.7;
+  playerY+=velocity;
+
+  if(playerY<0){
+    playerY=0;
+    velocity=0;
+  }
+
+  $("player").style.bottom=(30+playerY)+"%";
+
+  checkRunCollision();
+
+  if(runX<-230){
+
+    state.run=false;
+
+    gainXP(100);
+    unlock("swing");
+
+    popup(
+      "ROOFTOP CLEARED 🕷️",
+      "You made it across the city.<br><br>WEB SWING unlocked.",
+      "CONTINUE",
+      showMap
+    );
+
+    return;
+  }
+
+  runFrame=requestAnimationFrame(runLoop);
+
+}
+
+function checkRunCollision(){
+
+  const p=$("player").getBoundingClientRect();
+
+  document.querySelectorAll(".coin").forEach(c=>{
+
+    if(hit(p,c.getBoundingClientRect())){
+
+      c.remove();
+      state.tokens++;
+      gainXP(8);
+
+    }
+
+  });
+
+  document.querySelectorAll(".runnerObstacle").forEach(o=>{
+
+    if(hit(p,o.getBoundingClientRect())){
+
+      if(playerY<12){
+
+        o.remove();
+        loseLife();
+
+      }
+
+    }
+
+  });
+
+}
+
+function hit(a,b){
+
+  return a.left<b.right &&
+         a.right>b.left &&
+         a.top<b.bottom &&
+         a.bottom>b.top;
+
+}
+
+function jump(){
+
+  if(playerY>1)return;
+
+  velocity=13;
+
+}
+
+$("jumpBtn").onclick=jump;
+
+$("dashBtn").onclick=()=>{
+
+  if(playerY<10){
+    runX-=12;
+  }
+
+};
+
+document.addEventListener("keydown",e=>{
+
+  if(state.current==="run" && e.code==="Space"){
+    jump();
+  }
+
+});
+
+/* ================= SWING ================= */
+
+let swingIndex=0;
+
+function startSwing(){
+
+  swingIndex=0;
+
+  document.querySelectorAll(".anchor")
+    .forEach(a=>a.style.opacity="1");
+
+}
+
+document.querySelectorAll(".anchor").forEach(anchor=>{
+
+  anchor.onclick=()=>{
+
+    const n=Number(anchor.dataset.a);
+
+    if(n!==swingIndex){
+      loseLife();
+      return;
+    }
+
+    const r=anchor.getBoundingClientRect();
+
+    $("swingPlayer").style.left=
+      (r.left/window.innerWidth*100)+"%";
+
+    $("swingPlayer").style.top=
+      (r.top/window.innerHeight*100)+"%";
+
+    anchor.style.opacity=".25";
+
+    swingIndex++;
+    gainXP(20);
+
+    if(swingIndex===5){
+
+      gainXP(120);
+      unlock("aim");
+
+      popup(
+        "WEB SWING COMPLETE 🕸️",
+        "Perfect timing.<br><br>WEB AIM unlocked.",
+        "CONTINUE",
+        showMap
+      );
+
+    }
+
+  };
+
+});
+
+/* ================= AIM ================= */
+
+let aimHits=0;
+let aimTimer;
+
+function startAim(){
+
+  clearInterval(aimTimer);
+
+  aimHits=0;
+  $("aimWorld").innerHTML="";
+
+  spawnAimTarget();
+
+}
+
+function spawnAimTarget(){
+
+  if(aimHits>=7){
+
+    gainXP(140);
+    unlock("puzzle");
+
+    popup(
+      "TARGETS CLEARED 🎯",
+      "Your spider-sense is getting stronger.<br><br>WEB PUZZLE unlocked.",
+      "CONTINUE",
+      showMap
+    );
+
+    return;
+  }
+
+  const target=document.createElement("button");
+
+  target.className="target";
+  target.textContent="🕸️";
+
+  target.style.left=(5+Math.random()*85)+"%";
+  target.style.top=(18+Math.random()*65)+"%";
+
+  target.onclick=()=>{
+
+    target.remove();
+    aimHits++;
+    state.tokens++;
+    gainXP(18);
+
+    spawnAimTarget();
+
+  };
+
+  $("aimWorld").appendChild(target);
+
+  clearTimeout(aimTimer);
+
+  aimTimer=setTimeout(()=>{
+
+    if(target.isConnected){
+
+      target.remove();
+      loseLife();
+      spawnAimTarget();
+
+    }
+
+  },1700);
+
+}
+
+/* ================= PUZZLE ================= */
+
+let puzzleNext=1;
+
+function startPuzzle(){
+
+  puzzleNext=1;
+
+  const box=$("puzzleBox");
+
+  box.innerHTML="";
+
+  const positions=[
+    [12,15],[48,8],[78,20],
+    [65,45],[35,65],[8,45]
+  ];
+
+  positions.forEach((p,i)=>{
+
+    const d=document.createElement("button");
+
+    d.className="dot";
+    d.textContent=i+1;
+
+    d.style.left=p[0]+"%";
+    d.style.top=p[1]+"%";
+
+    d.onclick=()=>{
+
+      if(i+1!==puzzleNext){
+
+        loseLife();
+        return;
+
+      }
+
+      d.classList.add("done");
+
+      puzzleNext++;
+      gainXP(20);
+
+      if(puzzleNext===7){
+
+        gainXP(150);
+        unlock("save");
+
+        popup(
+          "WEB PATTERN SOLVED 🧩",
+          "The hidden route through the city is open.",
+          "CONTINUE",
+          showMap
+        );
+
+      }
+
+    };
+
+    box.appendChild(d);
+
+  });
+
+}
+
+/* ================= SAVE CITY ================= */
+
+let energyX=15;
+
+function startSave(){
+
+  energyX=15;
+  $("energy").style.left=energyX+"%";
+
+}
+
+$("pullBtn").onclick=()=>{
+
+  energyX+=10;
+
+  if(energyX>72)energyX=72;
+
+  $("energy").style.left=energyX+"%";
+
+  gainXP(12);
+
+  if(energyX>=70){
+
+    gainXP(180);
+    unlock("final");
+
+    popup(
+      "CITY SAVED 🏙️",
+      "The energy core is safe.<br><br>One final mission remains.",
+      "GO",
+      showMap
+    );
+
+  }
+
+};
+
+/* ================= FINAL ================= */
+
+let finalHits=0;
+let finalTimer;
+
+function startFinal(){
+
+  finalHits=0;
+
+  moveEnemy();
+
+}
+
+function moveEnemy(){
+
+  if(state.current!=="final")return;
+
+  const e=$("enemy");
+
+  e.style.left=(10+Math.random()*75)+"%";
+  e.style.top=(25+Math.random()*45)+"%";
+
+  finalTimer=setTimeout(moveEnemy,800);
+
+}
+
+$("hitBtn").onclick=()=>{
+
+  const core=$("finalCore").getBoundingClientRect();
+  const enemy=$("enemy").getBoundingClientRect();
+
+  const dx=(core.left+core.width/2)-
+           (enemy.left+enemy.width/2);
+
+  const dy=(core.top+core.height/2)-
+           (enemy.top+enemy.height/2);
+
+  const distance=Math.sqrt(dx*dx+dy*dy);
+
+  if(distance<180){
+
+    finalHits++;
+    gainXP(25);
+
+    $("enemy").style.transform="scale(0)";
+
+    setTimeout(()=>{
+      $("enemy").style.transform="";
+    },200);
+
+    if(finalHits>=6){
+
+      clearTimeout(finalTimer);
+
+      gainXP(300);
+
+      setTimeout(birthday,500);
+
+    }
+
+  }else{
+
+    loseLife();
+
+  }
+
+};
+
+/* ================= BIRTHDAY ================= */
+
+function birthday(){
+
+  document.querySelectorAll(".mission")
+    .forEach(x=>x.classList.add("hidden"));
+
+  $("hud").classList.add("hidden");
+
+  const end=document.createElement("div");
+
+  end.className="screen";
+  end.style.zIndex="200";
+
+  end.innerHTML=`
+
+    <div class="letter">
+
+      <h2>🕷️ MISSION COMPLETE</h2>
+
+      <p>
+happy birthdayyy 🥳🤍 hope you have a really good day today . semoga panjang umur , murah rezeki and everything goes well for you . i hope you get all the happiness you deserve , and semoga tahun ni jadi tahun yang lebih baik for you . enjoy your dayy! 🎂💗
+      </p>
+
+      <br>
+
+      <p>
+you actually completed the whole mission.
+<br><br>
+every rooftop, every web, every puzzle...
+<br><br>
+all just to get here.
+      </p>
+
+      <br>
+
+      <button class="mainBtn" id="secretBtn">
+        OPEN SECRET ENDING 🕷️
+      </button>
+
+    </div>
+  `;
+
+  $("game").appendChild(end);
+
+  confetti();
+
+  $("secretBtn").onclick=secretEnding;
+
+}
+
+function secretEnding(){
+
+  document.querySelectorAll(".screen")
+    .forEach(x=>x.remove());
+
+  const end=document.createElement("div");
+
+  end.className="screen";
+  end.style.zIndex="300";
+
+  end.innerHTML=`
+
+    <div class="card">
+
+      <div class="spider">🕷️</div>
+
+      <h1>
+        <span class="red">SECRET</span> ENDING
+      </h1>
+
+      <p class="muted">
+
+        you thought you were saving the city...
+        <br><br>
+        but the whole mission was actually made
+        just for your birthday.
+        <br><br>
+        happy birthday, danish 🤍🕷️
+
+      </p>
+
+      <button class="mainBtn" id="again">
+        PLAY AGAIN
+      </button>
+
+    </div>
+  `;
+
+  $("game").appendChild(end);
+
+  $("again").onclick=()=>location.reload();
+
+  confetti();
+
+}
+
+/* ================= CONFETTI ================= */
+
+function confetti(){
+
+  for(let i=0;i<80;i++){
+
+    const c=document.createElement("i");
+
+    c.className="confetti";
+
+    c.style.left=Math.random()*100+"%";
+    c.style.background=
+      ["#ef2344","#2e8cff","#fff","#ffd43b"]
+      [Math.floor(Math.random()*4)];
+
+    c.style.animationDelay=
+      Math.random()*1.8+"s";
+
+    $("game").appendChild(c);
+
+    setTimeout(()=>c.remove(),4500);
+
+  }
+
+}
+</script>
+
+</body>
+</html>
