@@ -1,0 +1,1562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>spider mission 🕷️</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bangers&family=Poppins:wght@400;500;600;700;800&display=swap');
+
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+  -webkit-tap-highlight-color:transparent;
+}
+
+body{
+  min-height:100vh;
+  overflow:hidden;
+  font-family:Poppins,sans-serif;
+  background:#050816;
+  color:white;
+}
+
+button{
+  font-family:inherit;
+  border:0;
+  cursor:pointer;
+}
+
+#app{
+  width:100%;
+  height:100vh;
+  position:relative;
+  overflow:hidden;
+}
+
+.page{
+  position:absolute;
+  inset:0;
+  display:none;
+  overflow-y:auto;
+  overflow-x:hidden;
+  padding:25px 18px 40px;
+}
+
+.page.active{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+
+h1,h2,h3,.comic{
+  font-family:Bangers,cursive;
+  letter-spacing:2px;
+}
+
+.red{color:#ff1744}
+.blue{color:#36a9ff}
+
+/* BACKGROUND */
+.city{
+  position:fixed;
+  bottom:0;
+  left:0;
+  width:100%;
+  height:27%;
+  display:flex;
+  align-items:flex-end;
+  gap:4px;
+  z-index:-2;
+}
+
+.building{
+  background:#10182d;
+  border:1px solid #25314e;
+  width:8%;
+  min-width:35px;
+  position:relative;
+}
+
+.window{
+  width:5px;
+  height:7px;
+  background:#ffd95a;
+  position:absolute;
+  opacity:.7;
+}
+
+.sky{
+  position:fixed;
+  inset:0;
+  z-index:-5;
+  background:
+    radial-gradient(circle at 50% 20%,#142858 0%,#080e20 45%,#03040c 100%);
+}
+
+.stars{
+  position:fixed;
+  inset:0;
+  z-index:-4;
+  background-image:
+    radial-gradient(circle,#fff 1px,transparent 1px),
+    radial-gradient(circle,#55aaff 1px,transparent 1px);
+  background-size:75px 75px,110px 110px;
+  opacity:.35;
+}
+
+/* WEB */
+.web-bg{
+  position:fixed;
+  width:600px;
+  height:600px;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  border-radius:50%;
+  background:
+    repeating-radial-gradient(circle,transparent 0 55px,rgba(255,255,255,.09) 56px 58px),
+    repeating-conic-gradient(from 0deg,transparent 0 14deg,rgba(255,255,255,.07) 15deg 16deg);
+  z-index:-3;
+  animation:spin 40s linear infinite;
+}
+
+@keyframes spin{
+  to{transform:translate(-50%,-50%) rotate(360deg)}
+}
+
+.web-line{
+  position:fixed;
+  width:2px;
+  height:150vh;
+  background:rgba(255,255,255,.08);
+  left:50%;
+  top:-20%;
+  transform-origin:center;
+  z-index:-3;
+}
+
+.web-line:nth-child(2){transform:rotate(30deg)}
+.web-line:nth-child(3){transform:rotate(60deg)}
+.web-line:nth-child(4){transform:rotate(90deg)}
+.web-line:nth-child(5){transform:rotate(120deg)}
+.web-line:nth-child(6){transform:rotate(150deg)}
+
+/* BUTTONS */
+.main-btn{
+  padding:13px 25px;
+  border-radius:30px;
+  color:white;
+  font-weight:800;
+  background:linear-gradient(135deg,#ef1745,#146cff);
+  box-shadow:0 0 25px rgba(255,25,70,.35);
+  margin-top:20px;
+}
+
+.main-btn:active{
+  transform:scale(.94);
+}
+
+.small-btn{
+  padding:9px 16px;
+  border-radius:20px;
+  background:#ffffff12;
+  border:1px solid #ffffff30;
+  color:white;
+}
+
+/* 1 */
+#p1{
+  justify-content:center;
+  text-align:center;
+}
+
+.spider-logo{
+  width:125px;
+  height:125px;
+  border-radius:50%;
+  background:radial-gradient(circle,#ec173f,#76051c);
+  border:4px solid white;
+  box-shadow:0 0 45px #ef1744;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:65px;
+  animation:float 2s ease-in-out infinite;
+}
+
+@keyframes float{
+  50%{transform:translateY(-12px)}
+}
+
+.loading{
+  margin-top:25px;
+  width:230px;
+  height:7px;
+  background:#ffffff18;
+  border-radius:10px;
+  overflow:hidden;
+}
+
+.loading span{
+  display:block;
+  height:100%;
+  width:0;
+  background:linear-gradient(90deg,#ff1744,#298cff);
+  animation:load 2s forwards;
+}
+
+@keyframes load{
+  to{width:100%}
+}
+
+/* 2 */
+.phone{
+  margin-top:80px;
+  width:320px;
+  max-width:95%;
+  background:#101728;
+  border:2px solid #ffffff30;
+  border-radius:28px;
+  padding:12px;
+  box-shadow:0 20px 50px #0008;
+}
+
+.notif{
+  margin-top:15px;
+  background:#ffffff12;
+  border-radius:18px;
+  padding:18px;
+  text-align:left;
+}
+
+.notif small{opacity:.6}
+
+/* 3 */
+.keypad{
+  display:grid;
+  grid-template-columns:repeat(3,70px);
+  gap:10px;
+  margin-top:25px;
+}
+
+.key{
+  height:58px;
+  border-radius:18px;
+  background:#ffffff12;
+  color:white;
+  font-size:20px;
+  border:1px solid #ffffff20;
+}
+
+.code{
+  letter-spacing:10px;
+  font-size:25px;
+  margin:15px;
+}
+
+/* cards */
+.card{
+  width:100%;
+  max-width:390px;
+  background:#ffffff0d;
+  border:1px solid #ffffff20;
+  border-radius:25px;
+  padding:22px;
+  margin-top:20px;
+  backdrop-filter:blur(12px);
+  box-shadow:0 15px 40px #0005;
+}
+
+/* 4 web shooter */
+.shooter{
+  width:180px;
+  height:180px;
+  border-radius:50%;
+  margin:40px auto;
+  background:radial-gradient(circle,#fff,#bce6ff 15%,#1477ff 18%,#092c78 65%);
+  box-shadow:0 0 40px #168cff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:60px;
+}
+
+.shooter.fire{
+  animation:shoot .6s;
+}
+
+@keyframes shoot{
+  50%{transform:scale(1.25);box-shadow:0 0 100px white}
+}
+
+/* 5 swing */
+.swing{
+  font-size:90px;
+  margin-top:80px;
+  animation:swing 2s ease-in-out infinite;
+}
+
+@keyframes swing{
+  0%,100%{transform:translate(-40px,20px) rotate(-12deg)}
+  50%{transform:translate(40px,-20px) rotate(12deg)}
+}
+
+/* 6 game */
+.game{
+  width:100%;
+  max-width:390px;
+  height:400px;
+  margin-top:20px;
+  position:relative;
+  overflow:hidden;
+  background:#081128;
+  border:2px solid #ffffff20;
+  border-radius:25px;
+}
+
+.player{
+  position:absolute;
+  bottom:20px;
+  left:45%;
+  font-size:45px;
+  touch-action:none;
+}
+
+.heart{
+  position:absolute;
+  font-size:27px;
+  animation:fall 3s linear forwards;
+}
+
+@keyframes fall{
+  from{top:-40px}
+  to{top:420px}
+}
+
+/* 7 */
+.boxes{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:12px;
+  width:100%;
+  max-width:390px;
+  margin-top:25px;
+}
+
+.box{
+  aspect-ratio:1;
+  border-radius:20px;
+  background:linear-gradient(135deg,#e71946,#123d9d);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:40px;
+  box-shadow:0 8px 20px #0005;
+}
+
+/* 8 letter */
+.envelope{
+  width:260px;
+  height:180px;
+  background:#e71946;
+  border-radius:15px;
+  margin:40px auto 20px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:65px;
+  cursor:pointer;
+}
+
+.letter{
+  display:none;
+  line-height:1.8;
+  text-align:left;
+}
+
+.letter.show{
+  display:block;
+}
+
+/* 9 flowers */
+.flowers{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:20px;
+  margin-top:30px;
+}
+
+.flower{
+  font-size:55px;
+  filter:grayscale(1);
+  transition:.3s;
+}
+
+.flower.open{
+  filter:none;
+  transform:scale(1.2) rotate(5deg);
+}
+
+/* 10 music */
+.album{
+  width:220px;
+  height:220px;
+  border-radius:25px;
+  background:
+    radial-gradient(circle,#ff1744 2px,transparent 3px),
+    linear-gradient(135deg,#111,#174b9e);
+  background-size:18px 18px,100% 100%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:80px;
+  margin:35px auto;
+}
+
+.visualizer{
+  height:80px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:5px;
+}
+
+.bar{
+  width:6px;
+  height:20px;
+  background:#ff1744;
+  border-radius:5px;
+}
+
+.playing .bar{
+  animation:bars .6s infinite alternate;
+}
+
+.bar:nth-child(2){animation-delay:.1s}
+.bar:nth-child(3){animation-delay:.2s}
+.bar:nth-child(4){animation-delay:.3s}
+.bar:nth-child(5){animation-delay:.4s}
+
+@keyframes bars{
+  to{height:70px}
+}
+
+/* 12 meter */
+.meter{
+  height:25px;
+  background:#ffffff12;
+  border-radius:20px;
+  overflow:hidden;
+  margin-top:20px;
+}
+
+.meter span{
+  display:block;
+  height:100%;
+  width:0;
+  background:linear-gradient(90deg,#ff1744,#ff5f8a,#45a9ff);
+  transition:1s;
+}
+
+/* 13 scratch */
+.scratch{
+  margin:30px auto;
+  width:280px;
+  height:130px;
+  border-radius:20px;
+  background:#888;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#111;
+  font-weight:800;
+  text-align:center;
+  user-select:none;
+}
+
+.scratch.done{
+  background:linear-gradient(135deg,#ff1744,#164bff);
+  color:white;
+}
+
+/* 14 wheel */
+.wheel{
+  width:230px;
+  height:230px;
+  border-radius:50%;
+  margin:30px auto;
+  border:8px solid white;
+  background:conic-gradient(#ef1744 0 60deg,#1267dc 60deg 120deg,#ef1744 120deg 180deg,#1267dc 180deg 240deg,#ef1744 240deg 300deg,#1267dc 300deg);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:40px;
+  transition:2s cubic-bezier(.2,.8,.2,1);
+}
+
+.pointer{
+  font-size:30px;
+}
+
+/* 15 missions */
+.missions{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+  width:100%;
+  max-width:390px;
+  margin-top:25px;
+}
+
+.mission{
+  padding:20px 10px;
+  border-radius:20px;
+  background:#ffffff10;
+  border:1px solid #ffffff20;
+  text-align:center;
+}
+
+/* 16 badges */
+.badges{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:15px;
+  margin-top:25px;
+}
+
+.badge{
+  width:90px;
+  height:90px;
+  border-radius:50%;
+  background:#ffffff10;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:35px;
+  border:2px solid #ffffff20;
+  opacity:.3;
+}
+
+.badge.unlocked{
+  opacity:1;
+  box-shadow:0 0 25px #ff1744;
+}
+
+/* 17 bubbles */
+.bubbles{
+  display:flex;
+  flex-wrap:wrap;
+  gap:12px;
+  justify-content:center;
+  margin-top:25px;
+}
+
+.bubble{
+  padding:13px 17px;
+  background:white;
+  color:#111;
+  border-radius:25px;
+  font-weight:700;
+  box-shadow:5px 5px #ef1744;
+}
+
+/* 18 polaroid */
+.polaroids{
+  display:flex;
+  gap:15px;
+  overflow-x:auto;
+  width:100%;
+  max-width:390px;
+  padding:20px 5px;
+}
+
+.polaroid{
+  min-width:180px;
+  height:220px;
+  padding:12px;
+  background:#fff;
+  color:#111;
+  transform:rotate(-3deg);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+}
+
+.polaroid:nth-child(even){transform:rotate(4deg)}
+
+/* 19 eggs */
+.egg{
+  font-size:50px;
+  margin:10px;
+  opacity:.5;
+}
+
+.egg.found{
+  opacity:1;
+  animation:pop .4s;
+}
+
+@keyframes pop{
+  50%{transform:scale(1.5)}
+}
+
+/* 20 countdown */
+.count{
+  font-family:Bangers;
+  font-size:130px;
+  margin:30px;
+  color:#ff1744;
+  text-shadow:5px 5px #1267dc;
+}
+
+/* 24 final */
+.final-spider{
+  font-size:100px;
+  animation:float 1.5s infinite;
+}
+
+.confetti{
+  position:fixed;
+  top:-20px;
+  font-size:25px;
+  animation:confetti 3s linear forwards;
+  pointer-events:none;
+}
+
+@keyframes confetti{
+  to{
+    transform:translateY(110vh) rotate(720deg);
+  }
+}
+
+/* NAV */
+.nav{
+  position:fixed;
+  bottom:12px;
+  left:50%;
+  transform:translateX(-50%);
+  width:calc(100% - 30px);
+  max-width:390px;
+  display:flex;
+  justify-content:space-between;
+  z-index:100;
+}
+
+.nav button{
+  width:48%;
+  padding:12px;
+  border-radius:25px;
+  background:#ffffff12;
+  border:1px solid #ffffff25;
+  color:white;
+  backdrop-filter:blur(10px);
+}
+
+.hidden{display:none!important}
+
+.subtitle{
+  opacity:.7;
+  text-align:center;
+  margin-top:8px;
+}
+
+.center{text-align:center}
+
+.divider{
+  width:100px;
+  height:3px;
+  background:#ff1744;
+  margin:15px auto;
+  border-radius:10px;
+}
+
+@media(max-width:380px){
+  .keypad{grid-template-columns:repeat(3,60px)}
+  .game{height:350px}
+}
+</style>
+</head>
+
+<body>
+
+<div id="app">
+
+<div class="sky"></div>
+<div class="stars"></div>
+<div class="web-bg"></div>
+<div class="web-line"></div>
+<div class="web-line"></div>
+<div class="web-line"></div>
+<div class="web-line"></div>
+<div class="web-line"></div>
+
+<div class="city" id="city"></div>
+
+<!-- 1 -->
+<section class="page active" id="p1">
+  <div class="spider-logo">🕷️</div>
+  <h1 style="font-size:55px;margin-top:25px">SPIDER MISSION</h1>
+  <p class="subtitle">a secret birthday mission is waiting...</p>
+
+  <div class="loading"><span></span></div>
+
+  <button class="main-btn" onclick="go(2)">
+    START MISSION 🕸️
+  </button>
+</section>
+
+<!-- 2 -->
+<section class="page" id="p2">
+  <h1>INCOMING MESSAGE</h1>
+
+  <div class="phone">
+    <small>9:41 PM</small>
+
+    <div class="notif">
+      <strong>🕷️ Birthday Mission</strong>
+      <br>
+      <small>Someone made something for you...</small>
+
+      <button class="main-btn" onclick="go(3)">
+        OPEN
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- 3 -->
+<section class="page" id="p3">
+  <h1>SECRET ACCESS</h1>
+  <p class="subtitle">enter the mission code</p>
+
+  <div class="code" id="code">••••</div>
+
+  <div class="keypad">
+    <button class="key" onclick="key(1)">1</button>
+    <button class="key" onclick="key(2)">2</button>
+    <button class="key" onclick="key(3)">3</button>
+    <button class="key" onclick="key(4)">4</button>
+    <button class="key" onclick="key(5)">5</button>
+    <button class="key" onclick="key(6)">6</button>
+    <button class="key" onclick="key(7)">7</button>
+    <button class="key" onclick="key(8)">8</button>
+    <button class="key" onclick="key(9)">9</button>
+    <button class="key" onclick="clearCode()">⌫</button>
+    <button class="key" onclick="key(0)">0</button>
+    <button class="key" onclick="checkCode()">✓</button>
+  </div>
+</section>
+
+<!-- 4 -->
+<section class="page" id="p4">
+  <h1>WEB SHOOTER</h1>
+  <p class="subtitle">tap the web shooter</p>
+
+  <div class="shooter" id="shooter" onclick="shootWeb()">🕸️</div>
+
+  <p id="webText" class="center">web system ready...</p>
+</section>
+
+<!-- 5 -->
+<section class="page" id="p5">
+  <h1>SWING MODE</h1>
+  <p class="subtitle">hold tight...</p>
+
+  <div class="swing">🕷️</div>
+
+  <div class="card center">
+    <h2>MISSION 01</h2>
+    <p>you've entered the city.</p>
+    <button class="main-btn" onclick="go(6)">SWING →</button>
+  </div>
+</section>
+
+<!-- 6 -->
+<section class="page" id="p6">
+  <h1>CATCH THE HEARTS</h1>
+  <p class="subtitle">move Spider and catch 5 hearts ❤️</p>
+
+  <div class="game" id="game">
+    <div class="player" id="player">🕷️</div>
+  </div>
+
+  <p>score: <b id="score">0</b> / 5</p>
+
+  <button class="main-btn hidden" id="gameNext" onclick="go(7)">
+    MISSION COMPLETE
+  </button>
+</section>
+
+<!-- 7 -->
+<section class="page" id="p7">
+  <h1>MYSTERY BOXES</h1>
+  <p class="subtitle">choose your surprise</p>
+
+  <div class="boxes">
+    <div class="box" onclick="boxOpen(this,'you found a little happiness 💗')">🎁</div>
+    <div class="box" onclick="boxOpen(this,'mission reward: one giant smile 🕷️')">🎁</div>
+    <div class="box" onclick="boxOpen(this,'secret message unlocked 👀')">🎁</div>
+    <div class="box" onclick="boxOpen(this,'you are officially awesome ⭐')">🎁</div>
+    <div class="box" onclick="boxOpen(this,'another little surprise for you 💙')">🎁</div>
+    <div class="box" onclick="boxOpen(this,'almost at the final mission...')">🎁</div>
+  </div>
+
+  <p id="boxText" class="card center">pick one...</p>
+
+  <button class="main-btn" onclick="go(8)">NEXT 🕸️</button>
+</section>
+
+<!-- 8 -->
+<section class="page" id="p8">
+  <h1>A LETTER FOR YOU</h1>
+
+  <div class="envelope" onclick="openLetter(this)">💌</div>
+
+  <div class="card letter" id="letter">
+    <p>
+      happy birthdayyy 🥳🤍 hope you have a really good day today .
+      semoga panjang umur , murah rezeki and everything goes well for you .
+      i hope you get all the happiness you deserve , and semoga tahun ni
+      jadi tahun yang lebih baik for you . enjoy your dayy! 🎂💗
+    </p>
+  </div>
+
+  <button class="main-btn" onclick="go(9)">CONTINUE</button>
+</section>
+
+<!-- 9 -->
+<section class="page" id="p9">
+  <h1>DIGITAL BOUQUET</h1>
+  <p class="subtitle">tap every flower 🌷</p>
+
+  <div class="flowers">
+    <span class="flower" onclick="flower(this)">🌹</span>
+    <span class="flower" onclick="flower(this)">🌷</span>
+    <span class="flower" onclick="flower(this)">🌻</span>
+    <span class="flower" onclick="flower(this)">🌸</span>
+    <span class="flower" onclick="flower(this)">🌺</span>
+    <span class="flower" onclick="flower(this)">💐</span>
+  </div>
+
+  <p id="flowerText" class="card center">0 / 6 flowers opened</p>
+
+  <button class="main-btn" onclick="go(10)">NEXT</button>
+</section>
+
+<!-- 10 -->
+<section class="page" id="p10">
+  <h1>MISSION PLAYLIST</h1>
+
+  <div class="album">🎧</div>
+
+  <div class="visualizer" id="visualizer">
+    <span class="bar"></span>
+    <span class="bar"></span>
+    <span class="bar"></span>
+    <span class="bar"></span>
+    <span class="bar"></span>
+  </div>
+
+  <button class="main-btn" onclick="toggleMusic()">▶ PLAY MUSIC</button>
+
+  <audio id="song" loop>
+    <source src="spiderman_song.mp3" type="audio/mpeg">
+  </audio>
+
+  <p class="subtitle">turn the music on and continue the mission 🎵</p>
+
+  <button class="main-btn" onclick="go(11)">NEXT</button>
+</section>
+
+<!-- 11 -->
+<section class="page" id="p11">
+  <h1>SPIDER CITY</h1>
+
+  <div class="card center">
+    <div style="font-size:80px">🌃🕷️</div>
+    <h2>NEW YORK WEB FILE</h2>
+    <p>
+      somewhere between the city lights,
+      there's always another web to discover.
+    </p>
+  </div>
+
+  <button class="main-btn" onclick="go(12)">EXPLORE</button>
+</section>
+
+<!-- 12 -->
+<section class="page" id="p12">
+  <h1>HEART METER</h1>
+  <p class="subtitle">your mission energy</p>
+
+  <div class="card">
+    <h2 id="meterText">0%</h2>
+    <div class="meter">
+      <span id="meter"></span>
+    </div>
+
+    <button class="main-btn" onclick="fillMeter()">
+      CHARGE ❤️
+    </button>
+  </div>
+
+  <button class="main-btn" onclick="go(13)">NEXT</button>
+</section>
+
+<!-- 13 -->
+<section class="page" id="p13">
+  <h1>SCRATCH CARD</h1>
+  <p class="subtitle">tap repeatedly to reveal the secret</p>
+
+  <div class="scratch" id="scratch" onclick="scratchCard()">
+    TAP TO SCRATCH
+  </div>
+
+  <p id="scratchCount">0 / 8</p>
+
+  <button class="main-btn" onclick="go(14)">NEXT</button>
+</section>
+
+<!-- 14 -->
+<section class="page" id="p14">
+  <h1>SPIDER WHEEL</h1>
+
+  <div class="pointer">▼</div>
+
+  <div class="wheel" id="wheel">🕷️</div>
+
+  <button class="main-btn" onclick="spinWheel()">SPIN</button>
+
+  <p id="wheelText" class="card center">what will you unlock?</p>
+
+  <button class="main-btn" onclick="go(15)">NEXT</button>
+</section>
+
+<!-- 15 -->
+<section class="page" id="p15">
+  <h1>CHOOSE A MISSION</h1>
+
+  <div class="missions">
+    <div class="mission" onclick="mission(this,'CITY MISSION COMPLETE 🏙️')">🏙️<br>City</div>
+    <div class="mission" onclick="mission(this,'WEB MISSION COMPLETE 🕸️')">🕸️<br>Web</div>
+    <div class="mission" onclick="mission(this,'HEART MISSION COMPLETE ❤️')">❤️<br>Heart</div>
+    <div class="mission" onclick="mission(this,'SECRET MISSION COMPLETE 🔐')">🔐<br>Secret</div>
+  </div>
+
+  <p id="missionText" class="card center">choose one</p>
+
+  <button class="main-btn" onclick="go(16)">NEXT</button>
+</section>
+
+<!-- 16 -->
+<section class="page" id="p16">
+  <h1>ACHIEVEMENTS</h1>
+
+  <div class="badges">
+    <div class="badge" id="b1">🕷️</div>
+    <div class="badge" id="b2">❤️</div>
+    <div class="badge" id="b3">🎁</div>
+    <div class="badge" id="b4">🕸️</div>
+    <div class="badge" id="b5">🎂</div>
+    <div class="badge" id="b6">⭐</div>
+  </div>
+
+  <button class="main-btn" onclick="unlockBadges()">UNLOCK BADGES</button>
+
+  <button class="main-btn" onclick="go(17)">NEXT</button>
+</section>
+
+<!-- 17 -->
+<section class="page" id="p17">
+  <h1>COMIC BUBBLES</h1>
+
+  <div class="bubbles">
+    <div class="bubble">POW! 💥</div>
+    <div class="bubble">WEB! 🕸️</div>
+    <div class="bubble">YAY! 🎂</div>
+    <div class="bubble">HEY! 👀</div>
+    <div class="bubble">LOVE! ❤️</div>
+    <div class="bubble">WOW! ⭐</div>
+  </div>
+
+  <div class="card center">
+    <h2>COMIC FILE</h2>
+    <p>every mission needs a little bit of chaos.</p>
+  </div>
+
+  <button class="main-btn" onclick="go(18)">NEXT</button>
+</section>
+
+<!-- 18 -->
+<section class="page" id="p18">
+  <h1>POLAROID FILES</h1>
+  <p class="subtitle">no photos needed — just little moments</p>
+
+  <div class="polaroids">
+    <div class="polaroid">PAGE 01<br><br>another year,<br>another adventure.</div>
+    <div class="polaroid">PAGE 02<br><br>keep smiling.<br>always.</div>
+    <div class="polaroid">PAGE 03<br><br>mission:<br>have a good day.</div>
+    <div class="polaroid">PAGE 04<br><br>birthday mode<br>ACTIVATED 🎂</div>
+  </div>
+
+  <button class="main-btn" onclick="go(19)">NEXT</button>
+</section>
+
+<!-- 19 -->
+<section class="page" id="p19">
+  <h1>HIDDEN EGGS</h1>
+  <p class="subtitle">find all 5 hidden spiders</p>
+
+  <div class="card center">
+    <span class="egg" onclick="egg(this)">🕷️</span>
+    <span class="egg" onclick="egg(this)">🕷️</span>
+    <span class="egg" onclick="egg(this)">🕷️</span>
+    <span class="egg" onclick="egg(this)">🕷️</span>
+    <span class="egg" onclick="egg(this)">🕷️</span>
+  </div>
+
+  <p id="eggText">0 / 5 found</p>
+
+  <button class="main-btn" onclick="go(20)">NEXT</button>
+</section>
+
+<!-- 20 -->
+<section class="page" id="p20">
+  <h1>FINAL COUNTDOWN</h1>
+
+  <div class="count" id="count">3</div>
+
+  <p class="subtitle">
+    the final mission is getting closer...
+  </p>
+
+  <button class="main-btn" onclick="startCountdown()">START COUNTDOWN</button>
+
+  <button class="main-btn" onclick="go(21)">NEXT</button>
+</section>
+
+<!-- 21 -->
+<section class="page" id="p21">
+  <h1>MOVING CITY</h1>
+
+  <div class="card center">
+    <div style="font-size:70px;animation:float 1s infinite">🌃</div>
+    <h2>CITY MODE</h2>
+    <p>
+      look around... the city is still moving.
+    </p>
+  </div>
+
+  <button class="main-btn" onclick="cityLights()">LIGHT UP THE CITY</button>
+
+  <button class="main-btn" onclick="go(22)">NEXT</button>
+</section>
+
+<!-- 22 -->
+<section class="page" id="p22">
+  <h1>WEB STORM</h1>
+
+  <div class="card center">
+    <div id="storm" style="font-size:90px">🕸️</div>
+    <p>tap the web to make it move.</p>
+
+    <button class="main-btn" onclick="webStorm()">
+      ACTIVATE WEB
+    </button>
+  </div>
+
+  <button class="main-btn" onclick="go(23)">NEXT</button>
+</section>
+
+<!-- 23 -->
+<section class="page" id="p23">
+  <h1>SWIPE MISSION</h1>
+  <p class="subtitle">swipe or use the buttons</p>
+
+  <div class="card center">
+    <div style="font-size:70px">🕷️</div>
+    <h2 id="slideText">MISSION CARD 01</h2>
+    <p id="slideDesc">you made it this far.</p>
+  </div>
+
+  <div style="display:flex;gap:10px;margin-top:20px">
+    <button class="small-btn" onclick="slide(-1)">←</button>
+    <button class="small-btn" onclick="slide(1)">→</button>
+  </div>
+
+  <button class="main-btn" onclick="go(24)">FINAL MISSION</button>
+</section>
+
+<!-- 24 -->
+<section class="page" id="p24">
+  <h1>FINAL CELEBRATION</h1>
+
+  <div class="final-spider">🕷️</div>
+
+  <div class="card center">
+    <h2 class="red">MISSION COMPLETE</h2>
+
+    <div class="divider"></div>
+
+    <p>
+      happy birthdayyy 🥳🤍
+    </p>
+
+    <p style="margin-top:10px">
+      today is your day.
+    </p>
+
+    <button class="main-btn" onclick="celebrate()">
+      CELEBRATE 🎉
+    </button>
+  </div>
+
+  <button class="main-btn" onclick="go(25)">
+    SECRET?
+  </button>
+</section>
+
+<!-- 25 -->
+<section class="page" id="p25">
+  <div class="spider-logo">🕷️</div>
+
+  <h1 style="font-size:55px;margin-top:25px">
+    SECRET ENDING
+  </h1>
+
+  <div class="card center">
+    <h2>YOU FOUND IT.</h2>
+
+    <div class="divider"></div>
+
+    <p style="line-height:1.8">
+      every little mission was just an excuse
+      to make your birthday a little more special.
+      🕷️❤️
+    </p>
+
+    <br>
+
+    <p class="blue">
+      happy birthday, danish 🎂
+    </p>
+
+    <button class="main-btn" onclick="celebrate()">
+      PLAY AGAIN
+    </button>
+  </div>
+</section>
+
+<div class="nav">
+  <button onclick="prevPage()">← BACK</button>
+  <button onclick="nextPage()">NEXT →</button>
+</div>
+
+</div>
+
+<script>
+
+let current=1;
+
+/* CITY */
+const city=document.getElementById("city");
+
+for(let i=0;i<16;i++){
+  let b=document.createElement("div");
+  b.className="building";
+  b.style.height=(80+Math.random()*170)+"px";
+
+  for(let j=0;j<12;j++){
+    let w=document.createElement("span");
+    w.className="window";
+    w.style.left=(10+Math.random()*75)+"%";
+    w.style.top=(10+Math.random()*80)+"%";
+    b.appendChild(w);
+  }
+
+  city.appendChild(b);
+}
+
+/* PAGE */
+function go(n){
+  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+  document.getElementById("p"+n).classList.add("active");
+  current=n;
+
+  if(n===6) startGame();
+}
+
+function nextPage(){
+  if(current<25) go(current+1);
+}
+
+function prevPage(){
+  if(current>1) go(current-1);
+}
+
+/* 3 PASSWORD */
+let entered="";
+
+function key(n){
+  if(entered.length<4){
+    entered+=n;
+    updateCode();
+  }
+}
+
+function updateCode(){
+  document.getElementById("code").textContent =
+    entered.padEnd(4,"•");
+}
+
+function clearCode(){
+  entered=entered.slice(0,-1);
+  updateCode();
+}
+
+function checkCode(){
+  if(entered==="0511"){
+    document.getElementById("code").textContent="✓";
+    setTimeout(()=>go(4),500);
+  }else{
+    document.getElementById("code").textContent="NOPE";
+    setTimeout(()=>{
+      entered="";
+      updateCode();
+    },700);
+  }
+}
+
+/* 4 */
+function shootWeb(){
+  const s=document.getElementById("shooter");
+  s.classList.remove("fire");
+  void s.offsetWidth;
+  s.classList.add("fire");
+
+  document.getElementById("webText").textContent=
+    "WEB SHOT! 🕸️ mission unlocked.";
+}
+
+/* 6 GAME */
+let gameStarted=false;
+let score=0;
+let gameTimer;
+
+function startGame(){
+  if(gameStarted)return;
+  gameStarted=true;
+  score=0;
+
+  gameTimer=setInterval(()=>{
+    createHeart();
+  },700);
+}
+
+const game=document.getElementById("game");
+const player=document.getElementById("player");
+
+function createHeart(){
+  if(current!==6)return;
+
+  const h=document.createElement("div");
+  h.className="heart";
+  h.textContent="❤️";
+  h.style.left=Math.random()*90+"%";
+  game.appendChild(h);
+
+  const checker=setInterval(()=>{
+    const a=h.getBoundingClientRect();
+    const b=player.getBoundingClientRect();
+
+    if(
+      a.left < b.right &&
+      a.right > b.left &&
+      a.top < b.bottom &&
+      a.bottom > b.top
+    ){
+      score++;
+      document.getElementById("score").textContent=score;
+      h.remove();
+      clearInterval(checker);
+
+      if(score>=5){
+        clearInterval(gameTimer);
+        document.getElementById("gameNext").classList.remove("hidden");
+        document.getElementById("score").textContent="5";
+        unlockBadge("b2");
+      }
+    }
+  },50);
+
+  setTimeout(()=>{
+    clearInterval(checker);
+    h.remove();
+  },3000);
+}
+
+game.addEventListener("pointermove",(e)=>{
+  const r=game.getBoundingClientRect();
+  let x=e.clientX-r.left;
+  x=Math.max(25,Math.min(r.width-25,x));
+  player.style.left=(x-25)+"px";
+});
+
+/* 7 BOX */
+function boxOpen(el,msg){
+  el.textContent="💗";
+  document.getElementById("boxText").textContent=msg;
+  unlockBadge("b3");
+}
+
+/* 8 LETTER */
+function openLetter(el){
+  el.style.transform="rotateX(180deg)";
+  document.getElementById("letter").classList.add("show");
+  unlockBadge("b5");
+}
+
+/* 9 FLOWERS */
+let flowers=0;
+
+function flower(el){
+  if(!el.classList.contains("open")){
+    el.classList.add("open");
+    flowers++;
+  }
+
+  document.getElementById("flowerText").textContent=
+    flowers+" / 6 flowers opened";
+
+  if(flowers===6){
+    unlockBadge("b6");
+  }
+}
+
+/* 10 MUSIC */
+let musicPlaying=false;
+
+function toggleMusic(){
+  const audio=document.getElementById("song");
+  const visual=document.getElementById("visualizer");
+
+  if(!musicPlaying){
+    audio.play().catch(()=>{});
+    visual.classList.add("playing");
+    musicPlaying=true;
+  }else{
+    audio.pause();
+    visual.classList.remove("playing");
+    musicPlaying=false;
+  }
+}
+
+/* 12 METER */
+let meter=0;
+
+function fillMeter(){
+  meter+=20;
+  if(meter>100)meter=100;
+
+  document.getElementById("meter").style.width=meter+"%";
+  document.getElementById("meterText").textContent=meter+"%";
+
+  if(meter===100)unlockBadge("b1");
+}
+
+/* 13 SCRATCH */
+let scratch=0;
+
+function scratchCard(){
+  scratch++;
+
+  document.getElementById("scratchCount").textContent=
+    scratch+" / 8";
+
+  if(scratch>=8){
+    const s=document.getElementById("scratch");
+    s.classList.add("done");
+    s.textContent="YOU FOUND THE SECRET ❤️";
+    unlockBadge("b4");
+  }
+}
+
+/* 14 WHEEL */
+let rotation=0;
+
+function spinWheel(){
+  rotation+=720+Math.random()*360;
+
+  document.getElementById("wheel").style.transform=
+    `rotate(${rotation}deg)`;
+
+  setTimeout(()=>{
+    const rewards=[
+      "WEB POWER 🕸️",
+      "HEART POWER ❤️",
+      "SPIDER POWER 🕷️",
+      "BIRTHDAY POWER 🎂",
+      "LUCKY POWER ⭐"
+    ];
+
+    document.getElementById("wheelText").textContent=
+      rewards[Math.floor(Math.random()*rewards.length)];
+  },1000);
+}
+
+/* 15 */
+function mission(el,msg){
+  el.style.background="linear-gradient(135deg,#ef1744,#1267dc)";
+  document.getElementById("missionText").textContent=msg;
+}
+
+/* 16 */
+function unlockBadge(id){
+  const b=document.getElementById(id);
+  if(b)b.classList.add("unlocked");
+}
+
+function unlockBadges(){
+  ["b1","b2","b3","b4","b5","b6"].forEach((id,i)=>{
+    setTimeout(()=>unlockBadge(id),i*150);
+  });
+}
+
+/* 19 */
+let eggs=0;
+
+function egg(el){
+  if(!el.classList.contains("found")){
+    el.classList.add("found");
+    eggs++;
+  }
+
+  document.getElementById("eggText").textContent=
+    eggs+" / 5 found";
+
+  if(eggs===5){
+    unlockBadge("b1");
+    document.getElementById("eggText").textContent=
+      "ALL HIDDEN SPIDERS FOUND! 🕷️";
+  }
+}
+
+/* 20 */
+let counting=false;
+
+function startCountdown(){
+  if(counting)return;
+
+  counting=true;
+
+  let n=3;
+  const c=document.getElementById("count");
+  c.textContent=n;
+
+  const timer=setInterval(()=>{
+    n--;
+
+    if(n>0){
+      c.textContent=n;
+    }else{
+      c.textContent="GO!";
+      clearInterval(timer);
+      counting=false;
+    }
+  },1000);
+}
+
+/* 21 */
+function cityLights(){
+  document.querySelectorAll(".window").forEach(w=>{
+    w.style.background="#ffffff";
+    w.style.boxShadow="0 0 8px #fff";
+  });
+}
+
+/* 22 */
+function webStorm(){
+  const s=document.getElementById("storm");
+
+  s.animate(
+    [
+      {transform:"scale(1) rotate(0deg)"},
+      {transform:"scale(2) rotate(180deg)"},
+      {transform:"scale(1) rotate(360deg)"}
+    ],
+    {duration:1200}
+  );
+}
+
+/* 23 SLIDES */
+let slideIndex=0;
+
+const slides=[
+  ["MISSION CARD 01","you made it this far."],
+  ["MISSION CARD 02","the web keeps getting bigger."],
+  ["MISSION CARD 03","one more step."],
+  ["MISSION CARD 04","almost at the secret."],
+  ["MISSION CARD 05","MISSION COMPLETE."]
+];
+
+function slide(dir){
+  slideIndex+=dir;
+
+  if(slideIndex<0)slideIndex=slides.length-1;
+  if(slideIndex>=slides.length)slideIndex=0;
+
+  document.getElementById("slideText").textContent=
+    slides[slideIndex][0];
+
+  document.getElementById("slideDesc").textContent=
+    slides[slideIndex][1];
+}
+
+/* 24 */
+function celebrate(){
+  for(let i=0;i<45;i++){
+    setTimeout(()=>{
+      const c=document.createElement("div");
+      c.className="confetti";
+
+      const items=["❤️","🕷️","🕸️","🎉","💙","⭐","🎂"];
+      c.textContent=items[Math.floor(Math.random()*items.length)];
+
+      c.style.left=Math.random()*100+"%";
+      c.style.animationDuration=(2+Math.random()*2)+"s";
+
+      document.body.appendChild(c);
+
+      setTimeout(()=>c.remove(),4000);
+    },i*35);
+  }
+}
+
+/* TOUCH SWIPE */
+let startX=0;
+
+document.addEventListener("touchstart",e=>{
+  startX=e.touches[0].clientX;
+});
+
+document.addEventListener("touchend",e=>{
+  const endX=e.changedTouches[0].clientX;
+  const diff=endX-startX;
+
+  if(Math.abs(diff)>80){
+    if(current===23){
+      slide(diff<0?1:-1);
+    }
+  }
+});
+
+</script>
+
+</body>
+</html>
