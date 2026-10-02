@@ -1,0 +1,2246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>spider birthday mission</title>
+
+<style>
+*{
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
+}
+
+html,body{
+  margin:0;
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  background:#050711;
+  font-family:Arial,sans-serif;
+  touch-action:none;
+}
+
+canvas{
+  display:block;
+  width:100%;
+  height:100%;
+}
+
+#hud{
+  position:fixed;
+  top:12px;
+  left:12px;
+  right:12px;
+  display:flex;
+  justify-content:space-between;
+  pointer-events:none;
+  z-index:5;
+}
+
+.hudBox{
+  background:#070a16dd;
+  border:1px solid #ffffff25;
+  padding:9px 12px;
+  border-radius:12px;
+  color:white;
+  font-size:13px;
+  font-weight:bold;
+  text-shadow:0 2px 5px #000;
+}
+
+#message{
+  position:fixed;
+  top:16%;
+  left:50%;
+  transform:translateX(-50%);
+  color:white;
+  font-size:20px;
+  font-weight:900;
+  text-align:center;
+  text-shadow:0 3px 10px #000;
+  opacity:0;
+  transition:.2s;
+  pointer-events:none;
+  z-index:6;
+}
+
+#controls{
+  position:fixed;
+  bottom:15px;
+  left:0;
+  right:0;
+  padding:0 16px;
+  display:flex;
+  justify-content:space-between;
+  z-index:8;
+}
+
+.controlGroup{
+  display:flex;
+  gap:10px;
+}
+
+.control{
+  width:62px;
+  height:62px;
+  border-radius:50%;
+  border:1px solid #ffffff35;
+  background:#080b18dd;
+  color:white;
+  font-size:23px;
+  font-weight:900;
+}
+
+.jump{
+  width:72px;
+  height:72px;
+}
+
+.overlay{
+  position:fixed;
+  inset:0;
+  z-index:20;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#000b;
+}
+
+.panel{
+  width:min(90%,520px);
+  padding:30px;
+  text-align:center;
+  color:white;
+  background:#080b18ee;
+  border:1px solid #ffffff25;
+  border-radius:24px;
+  box-shadow:0 20px 80px #000;
+}
+
+.panel h1{
+  margin:0 0 10px;
+  font-size:clamp(35px,9vw,60px);
+}
+
+.panel p{
+  line-height:1.5;
+  opacity:.8;
+}
+
+.startBtn{
+  border:0;
+  border-radius:14px;
+  padding:14px 25px;
+  background:#e43848;
+  color:white;
+  font-size:16px;
+  font-weight:900;
+}
+
+.hidden{
+  display:none;
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="game"></canvas>
+
+<div id="hud">
+  <div class="hudBox" id="mission">MISSION 1 · ROOFTOP RUN</div>
+  <div class="hudBox" id="stats">❤ 3 · ✦ 0 · XP 0</div>
+</div>
+
+<div id="message"></div>
+
+<div id="controls">
+  <div class="controlGroup">
+    <button class="control" id="left">←</button>
+    <button class="control" id="right">→</button>
+  </div>
+
+  <div class="controlGroup">
+    <button class="control" id="web">🕸</button>
+    <button class="control jump" id="jump">↑</button>
+  </div>
+</div>
+
+<div class="overlay" id="startScreen">
+  <div class="panel">
+    <h1>SPIDER<br>MISSION</h1>
+
+    <p>
+      run • jump • swing • collect • survive
+    </p>
+
+    <button class="startBtn" id="start">
+      START MISSION
+    </button>
+
+    <p style="font-size:12px">
+      mobile buttons · keyboard A/D/W/SPACE/E
+    </p>
+  </div>
+</div>
+
+<div class="overlay hidden" id="endScreen">
+  <div class="panel">
+
+    <h1 id="endTitle">MISSION COMPLETE</h1>
+
+    <p id="birthdayText"></p>
+
+    <button class="startBtn" id="again">
+      PLAY AGAIN
+    </button>
+
+  </div>
+</div>
+
+<script>
+
+const canvas=document.getElementById("game");
+const ctx=canvas.getContext("2d");
+
+let W=innerWidth;
+let H=innerHeight;
+let DPR=Math.min(devicePixelRatio||1,2);
+
+function resize(){
+
+  W=innerWidth;
+  H=innerHeight;
+
+  DPR=Math.min(devicePixelRatio||1,2);
+
+  canvas.width=W*DPR;
+  canvas.height=H*DPR;
+
+  ctx.setTransform(DPR,0,0,DPR,0,0);
+}
+
+resize();
+addEventListener("resize",resize);
+
+
+/* =========================
+   INPUT
+========================= */
+
+const keys={
+  left:false,
+  right:false,
+  jump:false,
+  web:false
+};
+
+const pressed={
+  jump:false,
+  web:false
+};
+
+function button(id,key){
+
+  const el=document.getElementById(id);
+
+  el.addEventListener("pointerdown",e=>{
+    e.preventDefault();
+
+    keys[key]=true;
+
+    if(key==="jump") pressed.jump=true;
+    if(key==="web") pressed.web=true;
+  });
+
+  el.addEventListener("pointerup",e=>{
+    e.preventDefault();
+    keys[key]=false;
+  });
+
+  el.addEventListener("pointercancel",()=>{
+    keys[key]=false;
+  });
+}
+
+button("left","left");
+button("right","right");
+button("jump","jump");
+button("web","web");
+
+
+addEventListener("keydown",e=>{
+
+  if(e.key==="a"||e.key==="ArrowLeft")
+    keys.left=true;
+
+  if(e.key==="d"||e.key==="ArrowRight")
+    keys.right=true;
+
+  if(
+    e.key===" "||
+    e.key==="w"||
+    e.key==="W"
+  ){
+    if(!keys.jump) pressed.jump=true;
+    keys.jump=true;
+  }
+
+  if(e.key==="e"||e.key==="E"){
+
+    if(!keys.web) pressed.web=true;
+
+    keys.web=true;
+  }
+
+});
+
+
+addEventListener("keyup",e=>{
+
+  if(e.key==="a"||e.key==="ArrowLeft")
+    keys.left=false;
+
+  if(e.key==="d"||e.key==="ArrowRight")
+    keys.right=false;
+
+  if(
+    e.key===" "||
+    e.key==="w"||
+    e.key==="W"
+  )
+    keys.jump=false;
+
+  if(e.key==="e"||e.key==="E")
+    keys.web=false;
+
+});
+
+
+/* =========================
+   GAME STATE
+========================= */
+
+let playing=false;
+
+let mission=1;
+
+let lives=3;
+
+let score=0;
+
+let xp=0;
+
+let cameraX=0;
+
+let screenShake=0;
+
+const WORLD_WIDTH=11000;
+
+
+/* =========================
+   HERO
+========================= */
+
+const hero={
+
+  x:100,
+  y:200,
+
+  width:30,
+  height:52,
+
+  vx:0,
+  vy:0,
+
+  grounded:false,
+
+  web:null,
+
+  invincible:0,
+
+  runFrame:0
+};
+
+
+/* =========================
+   CITY
+========================= */
+
+const platforms=[];
+
+let px=0;
+
+for(let i=0;i<70;i++){
+
+  const width=
+    150+
+    Math.random()*180;
+
+  const height=
+    H*.68+
+    Math.sin(i*1.5)*40+
+    (Math.random()-.5)*30;
+
+  platforms.push({
+
+    x:px,
+    y:height,
+    width:width,
+    height:18
+
+  });
+
+  px+=width+
+       70+
+       Math.random()*100;
+}
+
+
+/* =========================
+   OBSTACLES
+========================= */
+
+const obstacles=[];
+
+for(let i=2;i<platforms.length-2;i+=2){
+
+  const p=platforms[i];
+
+  obstacles.push({
+
+    x:p.x+p.width*.55,
+
+    y:p.y-32,
+
+    width:30,
+
+    height:32,
+
+    active:true
+
+  });
+}
+
+
+/* =========================
+   COLLECTIBLES
+========================= */
+
+const tokens=[];
+
+for(let i=0;i<65;i++){
+
+  const p=
+    platforms[
+      (i*3)%platforms.length
+    ];
+
+  tokens.push({
+
+    x:p.x+
+      30+
+      Math.random()*
+      Math.max(20,p.width-60),
+
+    y:p.y-
+      65-
+      Math.random()*100,
+
+    taken:false,
+
+    phase:Math.random()*6.28
+
+  });
+}
+
+
+/* =========================
+   WEB ANCHORS
+========================= */
+
+const anchors=[];
+
+for(let i=0;i<60;i++){
+
+  const p=
+    platforms[
+      Math.floor(
+        i*platforms.length/60
+      )
+    ];
+
+  anchors.push({
+
+    x:p.x+p.width/2,
+
+    y:p.y-
+      170-
+      Math.random()*120
+
+  });
+}
+
+
+/* =========================
+   CARS
+========================= */
+
+const cars=[];
+
+for(let i=0;i<25;i++){
+
+  cars.push({
+
+    x:i*480+
+
+      Math.random()*150,
+
+    y:H*.85,
+
+    speed:30+
+      Math.random()*45
+
+  });
+}
+
+
+/* =========================
+   NPC
+========================= */
+
+const people=[];
+
+for(let i=0;i<45;i++){
+
+  const p=
+    platforms[
+      (i*4)%platforms.length
+    ];
+
+  people.push({
+
+    x:p.x+
+      Math.random()*p.width,
+
+    y:p.y,
+
+    speed:
+      (Math.random()-.5)*.7
+
+  });
+}
+
+
+/* =========================
+   PARTICLES
+========================= */
+
+const particles=[];
+
+function burst(x,y,count=12){
+
+  for(let i=0;i<count;i++){
+
+    particles.push({
+
+      x:x,
+
+      y:y,
+
+      vx:
+        (Math.random()-.5)*6,
+
+      vy:
+        (Math.random()-.5)*6,
+
+      life:1
+
+    });
+  }
+}
+
+
+/* =========================
+   MESSAGE
+========================= */
+
+function message(text){
+
+  const el=
+    document.getElementById("message");
+
+  el.innerText=text;
+
+  el.style.opacity=1;
+
+  clearTimeout(message.timer);
+
+  message.timer=
+    setTimeout(()=>{
+
+      el.style.opacity=0;
+
+    },1300);
+}
+
+
+/* =========================
+   HUD
+========================= */
+
+function updateHUD(){
+
+  const names=[
+    "ROOFTOP RUN",
+    "WEB SWING",
+    "WEB AIM",
+    "CITY RESCUE",
+    "FINAL RUN"
+  ];
+
+  document.getElementById("mission")
+    .innerText=
+    `MISSION ${mission} · ${names[mission-1]}`;
+
+  document.getElementById("stats")
+    .innerText=
+    `❤ ${lives} · ✦ ${score} · XP ${xp}`;
+}
+
+
+/* =========================
+   FIND WEB ANCHOR
+========================= */
+
+function nearestAnchor(){
+
+  let best=null;
+
+  let distance=Infinity;
+
+  for(const a of anchors){
+
+    const dx=a.x-hero.x;
+
+    const dy=a.y-hero.y;
+
+    const d=
+      Math.sqrt(dx*dx+dy*dy);
+
+    if(
+      d<distance &&
+      d<450
+    ){
+
+      best=a;
+
+      distance=d;
+    }
+  }
+
+  return best;
+}
+
+
+/* =========================
+   DAMAGE
+========================= */
+
+function damage(){
+
+  if(hero.invincible>0)
+    return;
+
+  lives--;
+
+  hero.invincible=1.5;
+
+  hero.vy=-9;
+
+  screenShake=10;
+
+  burst(
+    hero.x,
+    hero.y,
+    20
+  );
+
+  message("WATCH OUT!");
+
+  updateHUD();
+
+  if(lives<=0){
+
+    finish(
+      "TRY AGAIN",
+      "the city still needs you 🤍"
+    );
+  }
+}
+
+
+/* =========================
+   PHYSICS
+========================= */
+
+function physics(){
+
+  if(hero.invincible>0)
+    hero.invincible-=.016;
+
+
+  /* movement */
+
+  if(keys.left)
+    hero.vx-=.55;
+
+  if(keys.right)
+    hero.vx+=.55;
+
+  hero.vx*=.87;
+
+  hero.vx=
+    Math.max(
+      -6,
+      Math.min(7,hero.vx)
+    );
+
+
+  hero.runFrame+=
+    Math.abs(hero.vx)*.18;
+
+
+  /* jump */
+
+  if(
+    pressed.jump &&
+    hero.grounded
+  ){
+
+    hero.vy=-12;
+
+    hero.grounded=false;
+
+    burst(
+      hero.x,
+      hero.y+hero.height,
+      6
+    );
+  }
+
+
+  /* web */
+
+  if(pressed.web){
+
+    if(hero.web){
+
+      hero.web=null;
+
+      message("WEB RELEASE");
+
+    }else{
+
+      const a=
+        nearestAnchor();
+
+      if(a){
+
+        hero.web=a;
+
+        message("WEB LOCKED");
+
+      }
+    }
+
+    pressed.web=false;
+  }
+
+
+  /* gravity / swing */
+
+  if(hero.web){
+
+    const a=hero.web;
+
+    const dx=a.x-hero.x;
+
+    const dy=a.y-hero.y;
+
+    const d=
+      Math.sqrt(dx*dx+dy*dy);
+
+    const nx=dx/d;
+
+    const ny=dy/d;
+
+
+    hero.vx+=nx*.34;
+
+    hero.vy+=ny*.34;
+
+    hero.vy+=.2;
+
+
+    const maxLength=320;
+
+    if(d>maxLength){
+
+      hero.x=
+        a.x-
+        nx*maxLength;
+
+      hero.y=
+        a.y-
+        ny*maxLength;
+
+    }
+
+  }else{
+
+    hero.vy+=.58;
+
+  }
+
+
+  pressed.jump=false;
+
+
+  hero.x+=hero.vx;
+
+  hero.y+=hero.vy;
+
+
+  /* platforms */
+
+  hero.grounded=false;
+
+  for(const p of platforms){
+
+    if(
+
+      hero.x+12>p.x &&
+
+      hero.x-12<
+        p.x+p.width &&
+
+      hero.y+
+        hero.height>=
+        p.y &&
+
+      hero.y+
+        hero.height<=
+        p.y+30 &&
+
+      hero.vy>=0
+
+    ){
+
+      hero.y=
+        p.y-
+        hero.height;
+
+      hero.vy=0;
+
+      hero.grounded=true;
+
+      break;
+    }
+  }
+
+
+  /* obstacles */
+
+  for(const o of obstacles){
+
+    if(
+
+      o.active &&
+
+      Math.abs(
+        o.x-hero.x
+      )<28 &&
+
+      hero.y+
+        hero.height>
+        o.y &&
+
+      hero.y<
+        o.y+o.height
+
+    ){
+
+      damage();
+
+    }
+  }
+
+
+  /* tokens */
+
+  for(const t of tokens){
+
+    if(t.taken)
+      continue;
+
+    const d=
+      Math.hypot(
+        t.x-hero.x,
+        t.y-(hero.y+25)
+      );
+
+    if(d<35){
+
+      t.taken=true;
+
+      score++;
+
+      xp+=10;
+
+      burst(
+        t.x,
+        t.y,
+        12
+      );
+
+      updateHUD();
+
+    }
+  }
+
+
+  /* fall */
+
+  if(hero.y>H+200){
+
+    damage();
+
+    resetHero();
+
+  }
+
+
+  /* camera */
+
+  cameraX+=
+    (
+      hero.x-
+      W*.3-
+      cameraX
+    )*.09;
+
+  cameraX=
+    Math.max(
+      0,
+      Math.min(
+        WORLD_WIDTH-W,
+        cameraX
+      )
+    );
+
+
+  /* mission */
+
+  if(
+    mission===1 &&
+    hero.x>2200
+  ){
+
+    nextMission();
+
+  }
+
+  if(
+    mission===2 &&
+    hero.x>4300
+  ){
+
+    nextMission();
+
+  }
+
+  if(
+    mission===4 &&
+    score>=12
+  ){
+
+    nextMission();
+
+  }
+
+  if(
+    mission===5 &&
+    hero.x>
+      WORLD_WIDTH-700
+  ){
+
+    finish(
+
+      "HAPPY BIRTHDAY 🤍",
+
+      "happy birthdayyy 🥳🤍 hope you have a really good day today . semoga panjang umur , murah rezeki and everything goes well for you . i hope you get all the happiness you deserve , and semoga tahun ni jadi tahun yang lebih baik for you . enjoy your dayy! 🎂💗"
+
+    );
+
+  }
+
+}
+
+
+/* =========================
+   MISSIONS
+========================= */
+
+let aimTargets=[];
+
+let aimScore=0;
+
+
+function nextMission(){
+
+  mission++;
+
+  xp+=100;
+
+  resetHero();
+
+  updateHUD();
+
+  message(
+    "MISSION COMPLETE! +100 XP"
+  );
+
+
+  if(mission===2){
+
+    message(
+      "WEB SWING — LOCK ANCHORS"
+    );
+
+  }
+
+
+  if(mission===3){
+
+    aimScore=0;
+
+    aimTargets=[];
+
+    for(let i=0;i<9;i++){
+
+      aimTargets.push({
+
+        x:
+          200+
+          Math.random()*
+          W*.7,
+
+        y:
+          120+
+          Math.random()*
+          H*.45,
+
+        vx:
+          (Math.random()-.5)*3,
+
+        hit:false
+
+      });
+    }
+
+    message(
+      "WEB AIM — HIT 6 SIGNALS"
+    );
+
+  }
+
+
+  if(mission===4){
+
+    score=0;
+
+    for(let i=0;i<12;i++)
+      tokens[i].taken=false;
+
+    message(
+      "CITY RESCUE — COLLECT 12 CORES"
+    );
+
+    updateHUD();
+
+  }
+
+
+  if(mission===5){
+
+    message(
+      "FINAL RUN — REACH THE SIGNAL"
+    );
+
+  }
+
+}
+
+
+/* =========================
+   SPECIAL MISSIONS
+========================= */
+
+function specialMission(){
+
+  if(mission!==3)
+    return;
+
+
+  for(const t of aimTargets){
+
+    t.x+=t.vx;
+
+    if(
+      t.x<
+        cameraX+30 ||
+      t.x>
+        cameraX+W-30
+    ){
+
+      t.vx*=-1;
+
+    }
+
+  }
+
+
+  if(pressed.web){
+
+    let nearest=null;
+
+    let distance=Infinity;
+
+    for(const t of aimTargets){
+
+      if(t.hit)
+        continue;
+
+      const d=
+        Math.hypot(
+          t.x-
+            (hero.x-cameraX),
+
+          t.y-
+            hero.y
+        );
+
+      if(d<distance){
+
+        distance=d;
+
+        nearest=t;
+
+      }
+    }
+
+
+    if(
+      nearest &&
+      distance<190
+    ){
+
+      nearest.hit=true;
+
+      aimScore++;
+
+      xp+=20;
+
+      burst(
+        nearest.x+cameraX,
+        nearest.y,
+        15
+      );
+
+      message(
+        "TARGET HIT +20"
+      );
+
+    }
+
+    pressed.web=false;
+
+  }
+
+
+  if(aimScore>=6){
+
+    nextMission();
+
+  }
+
+}
+
+
+/* =========================
+   DRAW SKY
+========================= */
+
+function drawSky(){
+
+  const gradient=
+    ctx.createLinearGradient(
+      0,0,0,H
+    );
+
+  gradient.addColorStop(
+    0,
+    "#050718"
+  );
+
+  gradient.addColorStop(
+    .65,
+    "#17152c"
+  );
+
+  gradient.addColorStop(
+    1,
+    "#090b11"
+  );
+
+  ctx.fillStyle=gradient;
+
+  ctx.fillRect(
+    0,
+    0,
+    W,
+    H
+  );
+
+
+  /* stars */
+
+  ctx.save();
+
+  ctx.translate(
+    -cameraX*.15,
+    0
+  );
+
+  for(let i=0;i<100;i++){
+
+    ctx.fillStyle=
+      "#ffffff55";
+
+    ctx.fillRect(
+
+      (i*197)%WORLD_WIDTH,
+
+      (i*83)%(H*.55),
+
+      2,
+      2
+
+    );
+
+  }
+
+  ctx.restore();
+
+
+  /* skyline */
+
+  ctx.save();
+
+  ctx.translate(
+    -cameraX*.2,
+    0
+  );
+
+  for(
+    let x=-500;
+    x<WORLD_WIDTH+500;
+    x+=130
+  ){
+
+    const bh=
+      100+
+      Math.abs(
+        Math.sin(x*.03)
+      )*260;
+
+    ctx.fillStyle=
+      "#101528";
+
+    ctx.fillRect(
+      x,
+      H*.72-bh,
+      105,
+      bh
+    );
+
+
+    for(
+      let yy=H*.72-bh+20;
+      yy<H*.72-10;
+      yy+=27
+    ){
+
+      ctx.fillStyle=
+        "#5c82c522";
+
+      ctx.fillRect(
+        x+15,
+        yy,
+        9,
+        12
+      );
+
+      ctx.fillRect(
+        x+45,
+        yy,
+        9,
+        12
+      );
+
+    }
+
+  }
+
+  ctx.restore();
+
+}
+
+
+/* =========================
+   DRAW ROAD
+========================= */
+
+function drawRoad(){
+
+  ctx.fillStyle="#080a0f";
+
+  ctx.fillRect(
+    0,
+    H*.79,
+    W,
+    H*.21
+  );
+
+
+  ctx.save();
+
+  ctx.translate(
+    -cameraX*.65,
+    0
+  );
+
+
+  for(
+    const car of cars
+  ){
+
+    car.x+=
+      car.speed*.016;
+
+    if(
+      car.x>
+      WORLD_WIDTH+500
+    )
+      car.x=-300;
+
+
+    ctx.fillStyle=
+      "#202638";
+
+    ctx.fillRect(
+      car.x,
+      H*.84,
+      80,
+      25
+    );
+
+
+    ctx.fillStyle=
+      "#ff5360";
+
+    ctx.fillRect(
+      car.x+68,
+      H*.85,
+      6,
+      6
+    );
+
+
+    ctx.fillStyle="#111";
+
+    ctx.beginPath();
+
+    ctx.arc(
+      car.x+15,
+      H*.88,
+      7,
+      0,
+      Math.PI*2
+    );
+
+    ctx.arc(
+      car.x+65,
+      H*.88,
+      7,
+      0,
+      Math.PI*2
+    );
+
+    ctx.fill();
+
+  }
+
+  ctx.restore();
+
+}
+
+
+/* =========================
+   DRAW BUILDINGS
+========================= */
+
+function drawBuildings(){
+
+  ctx.save();
+
+  ctx.translate(
+    -cameraX,
+    0
+  );
+
+
+  for(
+    const p of platforms
+  ){
+
+    if(
+      p.x+p.width<
+        cameraX-100 ||
+
+      p.x>
+        cameraX+W+100
+    )
+      continue;
+
+
+    ctx.fillStyle=
+      "#1b2132";
+
+    ctx.fillRect(
+      p.x,
+      p.y,
+      p.width,
+      90
+    );
+
+
+    ctx.fillStyle=
+      "#323a50";
+
+    ctx.fillRect(
+      p.x,
+      p.y,
+      p.width,
+      5
+    );
+
+
+    for(
+      let xx=p.x+15;
+      xx<p.x+p.width-10;
+      xx+=25
+    ){
+
+      ctx.fillStyle=
+        "#6a91c522";
+
+      ctx.fillRect(
+        xx,
+        p.y+18,
+        9,
+        12
+      );
+
+      ctx.fillRect(
+        xx,
+        p.y+43,
+        9,
+        12
+      );
+
+    }
+
+  }
+
+
+  /* people */
+
+  for(
+    const person of people
+  ){
+
+    person.x+=
+      person.speed*.016;
+
+    if(
+      person.x<0 ||
+      person.x>WORLD_WIDTH
+    )
+      person.speed*=-1;
+
+
+    if(
+      person.x<
+        cameraX-50 ||
+      person.x>
+        cameraX+W+50
+    )
+      continue;
+
+
+    ctx.fillStyle="#151923";
+
+    ctx.beginPath();
+
+    ctx.arc(
+      person.x,
+      person.y-27,
+      7,
+      0,
+      Math.PI*2
+    );
+
+    ctx.fill();
+
+    ctx.fillRect(
+      person.x-5,
+      person.y-20,
+      10,
+      18
+    );
+
+  }
+
+
+  /* obstacles */
+
+  for(
+    const o of obstacles
+  ){
+
+    ctx.fillStyle=
+      "#d63c4a";
+
+    ctx.fillRect(
+      o.x,
+      o.y,
+      o.width,
+      o.height
+    );
+
+    ctx.fillStyle=
+      "#ffb15f";
+
+    ctx.fillRect(
+      o.x+4,
+      o.y+5,
+      o.width-8,
+      5
+    );
+
+  }
+
+
+  ctx.restore();
+
+}
+
+
+/* =========================
+   DRAW TOKENS
+========================= */
+
+function drawTokens(){
+
+  ctx.save();
+
+  ctx.translate(
+    -cameraX,
+    0
+  );
+
+  for(
+    const t of tokens
+  ){
+
+    if(t.taken)
+      continue;
+
+
+    const y=
+      t.y+
+      Math.sin(
+        Date.now()/250+
+        t.phase
+      )*7;
+
+
+    ctx.fillStyle=
+      "#ff4055";
+
+    ctx.beginPath();
+
+    ctx.arc(
+      t.x,
+      y,
+      9,
+      0,
+      Math.PI*2
+    );
+
+    ctx.fill();
+
+
+    ctx.fillStyle="#fff";
+
+    ctx.font=
+      "bold 11px Arial";
+
+    ctx.fillText(
+      "✦",
+      t.x-4,
+      y+4
+    );
+
+  }
+
+  ctx.restore();
+
+}
+
+
+/* =========================
+   DRAW HERO
+========================= */
+
+function drawHero(){
+
+  const x=
+    hero.x-cameraX;
+
+  const y=
+    hero.y;
+
+
+  ctx.save();
+
+  ctx.translate(
+    x,
+    y
+  );
+
+
+  if(
+    hero.invincible>0 &&
+    Math.floor(
+      hero.invincible*15
+    )%2===0
+  )
+    ctx.globalAlpha=.35;
+
+
+  /* shadow */
+
+  ctx.fillStyle="#0008";
+
+  ctx.beginPath();
+
+  ctx.ellipse(
+    0,
+    hero.height+4,
+    23,
+    6,
+    0,
+    0,
+    Math.PI*2
+  );
+
+  ctx.fill();
+
+
+  /* legs */
+
+  const step=
+    Math.sin(
+      hero.runFrame
+    )*7;
+
+  ctx.strokeStyle=
+    "#1764a5";
+
+  ctx.lineWidth=7;
+
+  ctx.lineCap="round";
+
+  ctx.beginPath();
+
+  ctx.moveTo(
+    -5,
+    35
+  );
+
+  ctx.lineTo(
+    -11+step,
+    52
+  );
+
+  ctx.moveTo(
+    5,
+    35
+  );
+
+  ctx.lineTo(
+    11-step,
+    52
+  );
+
+  ctx.stroke();
+
+
+  /* body */
+
+  ctx.fillStyle=
+    "#c92f40";
+
+  ctx.fillRect(
+    -12,
+    8,
+    24,
+    29
+  );
+
+
+  /* blue sides */
+
+  ctx.fillStyle=
+    "#155b99";
+
+  ctx.fillRect(
+    -12,
+    26,
+    7,
+    11
+  );
+
+  ctx.fillRect(
+    5,
+    26,
+    7,
+    11
+  );
+
+
+  /* head */
+
+  ctx.fillStyle=
+    "#d93a47";
+
+  ctx.beginPath();
+
+  ctx.arc(
+    0,
+    0,
+    14,
+    0,
+    Math.PI*2
+  );
+
+  ctx.fill();
+
+
+  /* mask lines */
+
+  ctx.strokeStyle=
+    "#292936";
+
+  ctx.lineWidth=1;
+
+  ctx.beginPath();
+
+  ctx.moveTo(
+    -8,
+    -10
+  );
+
+  ctx.lineTo(
+    7,
+    10
+  );
+
+  ctx.moveTo(
+    8,
+    -10
+  );
+
+  ctx.lineTo(
+    -7,
+    10
+  );
+
+  ctx.moveTo(
+    -12,
+    0
+  );
+
+  ctx.lineTo(
+    12,
+    0
+  );
+
+  ctx.stroke();
+
+
+  /* eyes */
+
+  ctx.fillStyle="#fff";
+
+  ctx.beginPath();
+
+  ctx.ellipse(
+    -5,
+    -2,
+    3,
+    6,
+    -.3,
+    0,
+    Math.PI*2
+  );
+
+  ctx.ellipse(
+    5,
+    -2,
+    3,
+    6,
+    .3,
+    0,
+    Math.PI*2
+  );
+
+  ctx.fill();
+
+
+  /* arms */
+
+  ctx.strokeStyle=
+    "#d93a47";
+
+  ctx.lineWidth=7;
+
+  ctx.beginPath();
+
+  if(hero.web){
+
+    ctx.moveTo(
+      -10,
+      14
+    );
+
+    ctx.lineTo(
+      -20,
+      -8
+    );
+
+    ctx.moveTo(
+      10,
+      14
+    );
+
+    ctx.lineTo(
+      18,
+      -8
+    );
+
+  }else{
+
+    ctx.moveTo(
+      -10,
+      14
+    );
+
+    ctx.lineTo(
+      -18,
+      27
+    );
+
+    ctx.moveTo(
+      10,
+      14
+    );
+
+    ctx.lineTo(
+      18,
+      27
+    );
+
+  }
+
+  ctx.stroke();
+
+
+  ctx.restore();
+
+
+  /* web */
+
+  if(hero.web){
+
+    const a=
+      hero.web;
+
+    ctx.strokeStyle=
+      "#fff";
+
+    ctx.lineWidth=2;
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+      x,
+      y+8
+    );
+
+    ctx.lineTo(
+      a.x-cameraX,
+      a.y
+    );
+
+    ctx.stroke();
+
+
+    ctx.fillStyle="#fff";
+
+    ctx.beginPath();
+
+    ctx.arc(
+      a.x-cameraX,
+      a.y,
+      5,
+      0,
+      Math.PI*2
+    );
+
+    ctx.fill();
+
+  }
+
+}
+
+
+/* =========================
+   TARGETS
+========================= */
+
+function drawTargets(){
+
+  if(mission!==3)
+    return;
+
+
+  for(
+    const t of aimTargets
+  ){
+
+    if(t.hit)
+      continue;
+
+
+    ctx.strokeStyle=
+      "#ff5261";
+
+    ctx.lineWidth=2;
+
+    ctx.beginPath();
+
+    ctx.arc(
+      t.x,
+      t.y,
+      20,
+      0,
+      Math.PI*2
+    );
+
+    ctx.stroke();
+
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+      t.x-9,
+      t.y
+    );
+
+    ctx.lineTo(
+      t.x+9,
+      t.y
+    );
+
+    ctx.moveTo(
+      t.x,
+      t.y-9
+    );
+
+    ctx.lineTo(
+      t.x,
+      t.y+9
+    );
+
+    ctx.stroke();
+
+  }
+
+
+  ctx.fillStyle="#fff";
+
+  ctx.font=
+    "bold 14px Arial";
+
+  ctx.fillText(
+    `SIGNALS ${aimScore}/6`,
+    18,
+    H-165
+  );
+
+}
+
+
+/* =========================
+   PARTICLES
+========================= */
+
+function drawParticles(){
+
+  for(
+    let i=particles.length-1;
+    i>=0;
+    i--
+  ){
+
+    const p=
+      particles[i];
+
+    p.x+=p.vx;
+
+    p.y+=p.vy;
+
+    p.vy+=.08;
+
+    p.life-=.03;
+
+
+    if(p.life<=0){
+
+      particles.splice(
+        i,
+        1
+      );
+
+      continue;
+    }
+
+
+    ctx.globalAlpha=
+      p.life;
+
+    ctx.fillStyle=
+      "#ff5260";
+
+    ctx.fillRect(
+      p.x-cameraX,
+      p.y,
+      4,
+      4
+    );
+
+  }
+
+  ctx.globalAlpha=1;
+
+}
+
+
+/* =========================
+   DRAW
+========================= */
+
+function draw(){
+
+  drawSky();
+
+  ctx.save();
+
+
+  if(screenShake>1){
+
+    ctx.translate(
+      (Math.random()-.5)*
+      screenShake,
+
+      (Math.random()-.5)*
+      screenShake
+    );
+
+    screenShake*=.88;
+  }
+
+
+  drawBuildings();
+
+  drawRoad();
+
+  drawTokens();
+
+  drawTargets();
+
+  drawHero();
+
+  drawParticles();
+
+
+  ctx.restore();
+
+}
+
+
+/* =========================
+   RESET
+========================= */
+
+function resetHero(){
+
+  hero.x=100;
+
+  hero.y=180;
+
+  hero.vx=0;
+
+  hero.vy=0;
+
+  hero.web=null;
+
+  cameraX=0;
+
+}
+
+
+/* =========================
+   END
+========================= */
+
+function finish(title,text){
+
+  playing=false;
+
+  document.getElementById(
+    "endScreen"
+  ).classList.remove("hidden");
+
+  document.getElementById(
+    "endTitle"
+  ).innerText=title;
+
+  document.getElementById(
+    "birthdayText"
+  ).innerText=text;
+
+}
+
+
+/* =========================
+   START
+========================= */
+
+function startGame(){
+
+  document.getElementById(
+    "startScreen"
+  ).classList.add("hidden");
+
+  document.getElementById(
+    "endScreen"
+  ).classList.add("hidden");
+
+
+  playing=true;
+
+  mission=1;
+
+  lives=3;
+
+  score=0;
+
+  xp=0;
+
+  aimScore=0;
+
+  resetHero();
+
+
+  for(
+    const t of tokens
+  )
+    t.taken=false;
+
+
+  updateHUD();
+
+  message(
+    "RUN → JUMP → SWING"
+  );
+
+}
+
+
+/* =========================
+   LOOP
+========================= */
+
+let previous=0;
+
+function loop(time){
+
+  previous=time;
+
+  if(playing){
+
+    physics();
+
+    specialMission();
+
+  }
+
+  draw();
+
+  requestAnimationFrame(loop);
+
+}
+
+requestAnimationFrame(loop);
+
+
+document.getElementById(
+  "start"
+).onclick=startGame;
+
+
+document.getElementById(
+  "again"
+).onclick=startGame;
+
+</script>
+
+</body>
+</html>
