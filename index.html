@@ -1,0 +1,1619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>spider-man birthday mission 🕷️</title>
+
+<style>
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+  -webkit-tap-highlight-color:transparent;
+}
+
+body{
+  background:#050914;
+  color:white;
+  font-family:Arial,Helvetica,sans-serif;
+  overflow:hidden;
+  touch-action:none;
+}
+
+button{
+  font:inherit;
+  border:0;
+  cursor:pointer;
+}
+
+#game{
+  position:fixed;
+  inset:0;
+  overflow:hidden;
+  background:
+    radial-gradient(circle at 50% 20%,#142a55 0%,#071021 42%,#02040a 100%);
+}
+
+/* ---------- BACKGROUND ---------- */
+
+.sky{
+  position:absolute;
+  inset:0;
+  background:
+    radial-gradient(circle at 20% 25%,rgba(255,40,70,.18),transparent 18%),
+    radial-gradient(circle at 80% 35%,rgba(30,100,255,.16),transparent 20%);
+}
+
+.city{
+  position:absolute;
+  bottom:0;
+  left:0;
+  width:200%;
+  height:42%;
+  background:
+    linear-gradient(90deg,
+      #050912 0 5%,
+      #10192c 5% 10%,
+      #070b15 10% 14%,
+      #15213a 14% 20%,
+      #080c17 20% 27%,
+      #111b30 27% 34%,
+      #050912 34% 40%,
+      #14213b 40% 47%,
+      #070b15 47% 54%,
+      #16233d 54% 60%,
+      #050912 60% 68%,
+      #101a31 68% 75%,
+      #070b15 75% 82%,
+      #15213b 82% 89%,
+      #050912 89% 100%);
+  animation:cityMove 24s linear infinite;
+}
+
+@keyframes cityMove{
+  from{transform:translateX(0)}
+  to{transform:translateX(-50%)}
+}
+
+.windows{
+  position:absolute;
+  inset:0;
+  opacity:.5;
+  background-image:
+    repeating-linear-gradient(90deg,transparent 0 40px,rgba(255,220,100,.5) 41px 44px),
+    repeating-linear-gradient(0deg,transparent 0 30px,rgba(255,220,100,.25) 31px 34px);
+  background-size:180px 100%;
+}
+
+/* ---------- WEB ---------- */
+
+.web-bg{
+  position:absolute;
+  inset:0;
+  opacity:.09;
+  background:
+    repeating-radial-gradient(circle at 50% 50%,
+      transparent 0 45px,
+      white 46px 47px);
+}
+
+.web-line{
+  position:absolute;
+  width:160%;
+  height:1px;
+  background:rgba(255,255,255,.16);
+  left:-30%;
+  top:50%;
+  transform:rotate(25deg);
+}
+
+/* ---------- START ---------- */
+
+.screen{
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:25px;
+  z-index:10;
+}
+
+.card{
+  width:min(430px,100%);
+  padding:30px 24px;
+  border:1px solid rgba(255,255,255,.18);
+  border-radius:25px;
+  background:rgba(5,10,22,.88);
+  backdrop-filter:blur(15px);
+  box-shadow:0 20px 70px rgba(0,0,0,.5);
+  text-align:center;
+}
+
+.spider{
+  font-size:75px;
+  filter:drop-shadow(0 0 20px #e60026);
+  animation:float 2s ease-in-out infinite;
+}
+
+@keyframes float{
+  50%{transform:translateY(-10px)}
+}
+
+h1{
+  margin:10px 0;
+  font-size:30px;
+  letter-spacing:2px;
+}
+
+.red{
+  color:#ff2545;
+}
+
+.subtitle{
+  color:#aeb8ce;
+  line-height:1.6;
+  margin:15px 0 25px;
+}
+
+.main-btn{
+  width:100%;
+  padding:16px;
+  border-radius:14px;
+  color:white;
+  background:linear-gradient(135deg,#e60026,#9c001d);
+  font-weight:bold;
+  letter-spacing:1px;
+  box-shadow:0 8px 30px rgba(230,0,38,.3);
+}
+
+/* ---------- HUD ---------- */
+
+#hud{
+  position:absolute;
+  top:0;
+  left:0;
+  right:0;
+  z-index:30;
+  padding:12px;
+  display:none;
+  justify-content:space-between;
+  align-items:center;
+  background:linear-gradient(#02050dcc,transparent);
+}
+
+.hudBox{
+  background:rgba(3,7,17,.8);
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:12px;
+  padding:7px 10px;
+  font-size:12px;
+}
+
+#xpBar{
+  width:110px;
+  height:5px;
+  background:#20283a;
+  border-radius:10px;
+  overflow:hidden;
+  margin-top:5px;
+}
+
+#xpFill{
+  height:100%;
+  width:0%;
+  background:#e60026;
+}
+
+/* ---------- MAP ---------- */
+
+#map{
+  display:none;
+}
+
+.mapTitle{
+  position:absolute;
+  top:70px;
+  width:100%;
+  text-align:center;
+  z-index:5;
+}
+
+.mapTitle small{
+  color:#8d9bb7;
+}
+
+.mapArea{
+  position:absolute;
+  inset:110px 15px 30px;
+}
+
+.node{
+  position:absolute;
+  width:76px;
+  height:76px;
+  border-radius:50%;
+  border:2px solid #e60026;
+  background:#081124;
+  color:white;
+  box-shadow:0 0 25px rgba(230,0,38,.35);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  font-size:25px;
+}
+
+.node small{
+  font-size:8px;
+  margin-top:3px;
+}
+
+.node.locked{
+  filter:grayscale(1);
+  opacity:.35;
+  border-color:#647089;
+}
+
+.n1{left:8%;top:15%}
+.n2{left:48%;top:7%}
+.n3{right:8%;top:30%}
+.n4{left:25%;top:48%}
+.n5{right:20%;top:62%}
+.n6{left:48%;bottom:4%}
+
+.mapPath{
+  position:absolute;
+  height:3px;
+  background:#e60026;
+  transform-origin:left;
+  opacity:.4;
+}
+
+/* ---------- MISSIONS ---------- */
+
+.mission{
+  position:absolute;
+  inset:0;
+  display:none;
+}
+
+.missionTitle{
+  position:absolute;
+  top:70px;
+  width:100%;
+  text-align:center;
+  z-index:10;
+}
+
+.missionTitle h2{
+  font-size:23px;
+}
+
+.missionTitle p{
+  color:#9ca8bd;
+  font-size:12px;
+  margin-top:5px;
+}
+
+/* ---------- RUN ---------- */
+
+#runWorld{
+  position:absolute;
+  inset:0;
+  overflow:hidden;
+}
+
+.rooftop{
+  position:absolute;
+  bottom:0;
+  height:30%;
+  width:100%;
+  background:
+    repeating-linear-gradient(90deg,#111b2e 0 70px,#17243b 71px 73px);
+  border-top:4px solid #273957;
+}
+
+.player{
+  position:absolute;
+  left:17%;
+  bottom:30%;
+  width:45px;
+  height:65px;
+  z-index:8;
+  font-size:42px;
+  transition:bottom .18s;
+}
+
+.obstacle{
+  position:absolute;
+  bottom:30%;
+  width:38px;
+  height:55px;
+  background:#e60026;
+  border-radius:8px 8px 2px 2px;
+  box-shadow:0 0 15px rgba(230,0,38,.5);
+}
+
+.token{
+  position:absolute;
+  width:22px;
+  height:22px;
+  border-radius:50%;
+  background:#ffd43b;
+  color:#111;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-size:12px;
+}
+
+/* ---------- CONTROLS ---------- */
+
+.controls{
+  position:absolute;
+  bottom:25px;
+  left:0;
+  right:0;
+  display:flex;
+  justify-content:center;
+  gap:18px;
+  z-index:20;
+}
+
+.control{
+  width:72px;
+  height:52px;
+  border-radius:15px;
+  background:rgba(255,255,255,.12);
+  color:white;
+  border:1px solid rgba(255,255,255,.15);
+}
+
+/* ---------- SWING ---------- */
+
+#swingWorld{
+  position:absolute;
+  inset:0;
+}
+
+.anchor{
+  position:absolute;
+  width:18px;
+  height:18px;
+  background:white;
+  border-radius:50%;
+  box-shadow:0 0 20px white;
+}
+
+#swingPlayer{
+  position:absolute;
+  font-size:42px;
+  left:18%;
+  top:55%;
+  z-index:5;
+}
+
+.swingWeb{
+  position:absolute;
+  height:2px;
+  background:white;
+  transform-origin:left;
+}
+
+/* ---------- AIM ---------- */
+
+#aimWorld{
+  position:absolute;
+  inset:0;
+}
+
+.target{
+  position:absolute;
+  width:50px;
+  height:50px;
+  border:3px solid #ff304d;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:20px;
+  animation:pulse 1s infinite;
+}
+
+@keyframes pulse{
+  50%{transform:scale(1.15)}
+}
+
+.crosshair{
+  position:absolute;
+  width:65px;
+  height:65px;
+  border:2px solid white;
+  border-radius:50%;
+  pointer-events:none;
+  z-index:10;
+  transform:translate(-50%,-50%);
+}
+
+.shot{
+  position:absolute;
+  width:4px;
+  height:35px;
+  background:white;
+  transform-origin:bottom;
+}
+
+/* ---------- PUZZLE ---------- */
+
+#puzzle{
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.puzzleGrid{
+  width:min(330px,90vw);
+  height:330px;
+  position:relative;
+  border:1px solid rgba(255,255,255,.15);
+  border-radius:20px;
+  background:rgba(0,0,0,.3);
+}
+
+.dot{
+  position:absolute;
+  width:35px;
+  height:35px;
+  border-radius:50%;
+  background:#14233f;
+  border:2px solid #e60026;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-weight:bold;
+}
+
+.dot.done{
+  background:#e60026;
+  box-shadow:0 0 20px #e60026;
+}
+
+/* ---------- CITY SAVE ---------- */
+
+#saveWorld{
+  position:absolute;
+  inset:0;
+}
+
+.saveItem{
+  position:absolute;
+  font-size:35px;
+  animation:drift 2s ease-in-out infinite;
+}
+
+@keyframes drift{
+  50%{transform:translateY(-12px)}
+}
+
+.saveZone{
+  position:absolute;
+  left:50%;
+  bottom:22%;
+  transform:translateX(-50%);
+  width:130px;
+  height:130px;
+  border:3px dashed #27e6ff;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+}
+
+/* ---------- FINAL ---------- */
+
+#finalChallenge{
+  position:absolute;
+  inset:0;
+}
+
+.finalCore{
+  position:absolute;
+  left:50%;
+  top:48%;
+  transform:translate(-50%,-50%);
+  width:150px;
+  height:150px;
+  border-radius:50%;
+  background:radial-gradient(circle,#fff 0 4%,#e60026 5% 30%,#25000a 31% 100%);
+  box-shadow:0 0 70px #e60026;
+  animation:core 1.5s infinite;
+}
+
+@keyframes core{
+  50%{transform:translate(-50%,-50%) scale(1.08)}
+}
+
+/* ---------- POPUP ---------- */
+
+#popup{
+  position:absolute;
+  inset:0;
+  z-index:100;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  background:rgba(0,0,0,.7);
+  padding:20px;
+}
+
+.popupCard{
+  max-width:380px;
+  width:100%;
+  background:#081124;
+  border:1px solid rgba(255,255,255,.2);
+  border-radius:22px;
+  padding:25px;
+  text-align:center;
+}
+
+.popupCard p{
+  color:#b6c0d2;
+  line-height:1.6;
+  margin:12px 0 20px;
+}
+
+/* ---------- LETTER ---------- */
+
+.letter{
+  background:#fffaf4;
+  color:#211b1b;
+  border-radius:8px;
+  padding:28px;
+  text-align:left;
+  line-height:1.7;
+  max-height:70vh;
+  overflow:auto;
+  box-shadow:0 20px 80px #000;
+}
+
+.letter h2{
+  color:#c90025;
+  margin-bottom:15px;
+}
+
+.letter p{
+  white-space:pre-line;
+}
+
+/* ---------- CONFETTI ---------- */
+
+.confetti{
+  position:absolute;
+  width:8px;
+  height:14px;
+  animation:fall 3s linear forwards;
+}
+
+@keyframes fall{
+  from{
+    transform:translateY(-20px) rotate(0);
+    opacity:1;
+  }
+  to{
+    transform:translateY(110vh) rotate(720deg);
+    opacity:0;
+  }
+}
+
+/* ---------- MOBILE ---------- */
+
+@media(max-width:500px){
+  h1{font-size:25px}
+  .node{width:65px;height:65px}
+  .hudBox{font-size:10px}
+}
+</style>
+</head>
+
+<body>
+
+<div id="game">
+
+<div class="sky"></div>
+<div class="web-bg"></div>
+<div class="city"></div>
+<div class="windows"></div>
+
+<!-- START -->
+<div class="screen" id="start">
+  <div class="card">
+    <div class="spider">🕷️</div>
+    <h1><span class="red">SPIDER</span>-MISSION</h1>
+    <p class="subtitle">
+      a secret birthday mission has appeared.<br>
+      the city needs one hero.
+    </p>
+    <button class="main-btn" onclick="startGame()">START MISSION</button>
+  </div>
+</div>
+
+<!-- HUD -->
+<div id="hud">
+
+  <div class="hudBox">
+    ❤️ <span id="lives">3</span>
+  </div>
+
+  <div class="hudBox">
+    LV <span id="level">1</span>
+    <div id="xpBar">
+      <div id="xpFill"></div>
+    </div>
+  </div>
+
+  <div class="hudBox">
+    🕷️ <span id="tokens">0</span>
+  </div>
+
+</div>
+
+<!-- MAP -->
+<div class="screen" id="map">
+
+  <div class="mapTitle">
+    <h1>NEW YORK // 00:00</h1>
+    <small>choose your next mission</small>
+  </div>
+
+  <div class="mapArea">
+
+    <div class="mapPath" style="width:150px;left:20%;top:22%;transform:rotate(-12deg)"></div>
+    <div class="mapPath" style="width:160px;left:55%;top:25%;transform:rotate(25deg)"></div>
+    <div class="mapPath" style="width:170px;left:32%;top:54%;transform:rotate(25deg)"></div>
+
+    <button class="node n1" onclick="openMission('run')">
+      🏃
+      <small>ROOFTOP RUN</small>
+    </button>
+
+    <button class="node n2 locked" id="node2" onclick="openMission('swing')">
+      🕸️
+      <small>WEB SWING</small>
+    </button>
+
+    <button class="node n3 locked" id="node3" onclick="openMission('aim')">
+      🎯
+      <small>WEB AIM</small>
+    </button>
+
+    <button class="node n4 locked" id="node4" onclick="openMission('puzzle')">
+      🧩
+      <small>WEB PUZZLE</small>
+    </button>
+
+    <button class="node n5 locked" id="node5" onclick="openMission('save')">
+      🏙️
+      <small>SAVE CITY</small>
+    </button>
+
+    <button class="node n6 locked" id="node6" onclick="openMission('final')">
+      🕷️
+      <small>FINAL</small>
+    </button>
+
+  </div>
+
+</div>
+
+<!-- ================= RUN ================= -->
+
+<div class="mission" id="run">
+
+  <div class="missionTitle">
+    <h2>ROOFTOP RUN</h2>
+    <p>jump over obstacles and collect spider tokens</p>
+  </div>
+
+  <div id="runWorld">
+
+    <div class="rooftop"></div>
+
+    <div class="player" id="player">🕷️</div>
+
+  </div>
+
+  <div class="controls">
+    <button class="control" onclick="jump()">JUMP</button>
+    <button class="control" onclick="dash()">WEB DASH</button>
+  </div>
+
+</div>
+
+<!-- ================= SWING ================= -->
+
+<div class="mission" id="swing">
+
+  <div class="missionTitle">
+    <h2>WEB SWING</h2>
+    <p>tap the anchors at the right time</p>
+  </div>
+
+  <div id="swingWorld">
+
+    <div class="anchor" style="left:20%;top:25%"></div>
+    <div class="anchor" style="left:48%;top:18%"></div>
+    <div class="anchor" style="left:75%;top:32%"></div>
+    <div class="anchor" style="left:58%;top:55%"></div>
+    <div class="anchor" style="left:85%;top:65%"></div>
+
+    <div id="swingPlayer">🕷️</div>
+
+  </div>
+
+  <div class="controls">
+    <button class="control" onclick="swing()">🕸️ SWING</button>
+  </div>
+
+</div>
+
+<!-- ================= AIM ================= -->
+
+<div class="mission" id="aim">
+
+  <div class="missionTitle">
+    <h2>WEB AIM</h2>
+    <p>tap the targets before they disappear</p>
+  </div>
+
+  <div id="aimWorld"></div>
+
+</div>
+
+<!-- ================= PUZZLE ================= -->
+
+<div class="mission" id="puzzle">
+
+  <div class="missionTitle">
+    <h2>WEB PUZZLE</h2>
+    <p>connect the nodes in order</p>
+  </div>
+
+  <div class="puzzleGrid" id="puzzleGrid"></div>
+
+</div>
+
+<!-- ================= SAVE CITY ================= -->
+
+<div class="mission" id="save">
+
+  <div class="missionTitle">
+    <h2>SAVE THE CITY</h2>
+    <p>move the energy core into the safe zone</p>
+  </div>
+
+  <div id="saveWorld">
+
+    <div class="saveZone">
+      SAFE ZONE
+    </div>
+
+    <div class="saveItem" id="coreItem" style="left:25%;top:35%">💠</div>
+
+  </div>
+
+  <div class="controls">
+    <button class="control" onclick="moveCore()">🕸️ PULL</button>
+  </div>
+
+</div>
+
+<!-- ================= FINAL ================= -->
+
+<div class="mission" id="final">
+
+  <div class="missionTitle">
+    <h2>FINAL CHALLENGE</h2>
+    <p>use your spider sense</p>
+  </div>
+
+  <div id="finalChallenge">
+
+    <div class="finalCore"></div>
+
+  </div>
+
+  <div class="controls">
+    <button class="control" onclick="finalHit()">WEB HIT</button>
+  </div>
+
+</div>
+
+<!-- POPUP -->
+
+<div id="popup">
+  <div class="popupCard" id="popupContent"></div>
+</div>
+
+</div>
+
+<script>
+
+/* ================= GAME STATE ================= */
+
+let lives = 3;
+let xp = 0;
+let level = 1;
+let tokens = 0;
+
+let currentMission = null;
+
+let runScore = 0;
+let swingScore = 0;
+let aimScore = 0;
+let puzzleScore = 0;
+let saveScore = 0;
+let finalScore = 0;
+
+let secretFound = false;
+
+
+/* ================= BASIC ================= */
+
+function startGame(){
+
+  document.getElementById("start").style.display="none";
+  document.getElementById("hud").style.display="flex";
+  document.getElementById("map").style.display="flex";
+
+  showPopup(
+    "🕷️ MISSION ACCEPTED",
+    "Danish's birthday mission has started.<br><br>Complete the city missions to unlock the final birthday reveal.",
+    "LET'S GO",
+    closePopup
+  );
+}
+
+
+function showPopup(title,text,button,action){
+
+  document.getElementById("popup").style.display="flex";
+
+  document.getElementById("popupContent").innerHTML=`
+    <h2>${title}</h2>
+    <p>${text}</p>
+    <button class="main-btn" id="popupBtn">${button}</button>
+  `;
+
+  document.getElementById("popupBtn").onclick=action;
+}
+
+
+function closePopup(){
+
+  document.getElementById("popup").style.display="none";
+
+}
+
+
+function updateHUD(){
+
+  document.getElementById("lives").textContent=lives;
+  document.getElementById("level").textContent=level;
+  document.getElementById("tokens").textContent=tokens;
+
+  document.getElementById("xpFill").style.width=(xp%100)+"%";
+
+  if(xp>=100){
+    level++;
+    xp-=100;
+  }
+
+}
+
+
+function gainXP(amount){
+
+  xp+=amount;
+  updateHUD();
+
+}
+
+
+/* ================= MAP ================= */
+
+function unlock(id){
+
+  const el=document.getElementById(id);
+
+  if(el){
+    el.classList.remove("locked");
+  }
+
+}
+
+
+function openMission(name){
+
+  if(name==="swing" && swingScore<1)return;
+  if(name==="aim" && aimScore<1)return;
+  if(name==="puzzle" && puzzleScore<1)return;
+  if(name==="save" && saveScore<1)return;
+  if(name==="final" && finalScore<1)return;
+
+  document.getElementById("map").style.display="none";
+
+  document.querySelectorAll(".mission").forEach(x=>{
+    x.style.display="none";
+  });
+
+  document.getElementById(name).style.display="block";
+
+  currentMission=name;
+
+  if(name==="run")initRun();
+  if(name==="swing")initSwing();
+  if(name==="aim")initAim();
+  if(name==="puzzle")initPuzzle();
+  if(name==="save")initSave();
+  if(name==="final")initFinal();
+
+}
+
+
+/* ================= RETURN MAP ================= */
+
+function returnMap(){
+
+  document.querySelectorAll(".mission").forEach(x=>{
+    x.style.display="none";
+  });
+
+  document.getElementById("map").style.display="flex";
+
+}
+
+
+/* ================= ROOFTOP RUN ================= */
+
+let runTimer;
+let jumping=false;
+let dashActive=false;
+
+function initRun(){
+
+  runScore=0;
+
+  const world=document.getElementById("runWorld");
+
+  world.querySelectorAll(".obstacle,.token").forEach(x=>x.remove());
+
+  for(let i=0;i<6;i++){
+
+    let obstacle=document.createElement("div");
+
+    obstacle.className="obstacle";
+
+    obstacle.style.left=(100+i*45)+"%";
+
+    world.appendChild(obstacle);
+
+  }
+
+  for(let i=0;i<8;i++){
+
+    let token=document.createElement("div");
+
+    token.className="token";
+    token.textContent="★";
+
+    token.style.left=(115+i*37)+"%";
+    token.style.bottom=(38+Math.random()*30)+"%";
+
+    world.appendChild(token);
+
+  }
+
+  world.style.transform="translateX(0)";
+
+  clearInterval(runTimer);
+
+  let position=0;
+
+  runTimer=setInterval(()=>{
+
+    position-=1.2;
+
+    world.style.transform=`translateX(${position}%)`;
+
+    checkRun();
+
+    if(runScore>=8){
+
+      clearInterval(runTimer);
+
+      gainXP(120);
+
+      tokens+=3;
+
+      unlock("node2");
+
+      showPopup(
+        "🕸️ ROOFTOP CLEARED",
+        "You made it across the rooftops.<br><br>WEB SWING is now unlocked.",
+        "NEXT MISSION",
+        ()=>{
+          closePopup();
+          returnMap();
+        }
+      );
+
+    }
+
+  },100);
+
+}
+
+
+function jump(){
+
+  if(jumping)return;
+
+  jumping=true;
+
+  const p=document.getElementById("player");
+
+  p.style.bottom="55%";
+
+  setTimeout(()=>{
+    p.style.bottom="30%";
+    jumping=false;
+  },500);
+
+}
+
+
+function dash(){
+
+  if(dashActive)return;
+
+  dashActive=true;
+
+  const p=document.getElementById("player");
+
+  p.style.transform="translateX(100px) scale(1.15)";
+
+  setTimeout(()=>{
+    p.style.transform="";
+    dashActive=false;
+  },400);
+
+}
+
+
+function checkRun(){
+
+  const tokensEls=document.querySelectorAll("#runWorld .token");
+
+  tokensEls.forEach(t=>{
+
+    let rect=t.getBoundingClientRect();
+    let player=document.getElementById("player").getBoundingClientRect();
+
+    if(rect.left<player.right &&
+       rect.right>player.left &&
+       rect.top<player.bottom &&
+       rect.bottom>player.top){
+
+      t.remove();
+      runScore++;
+      tokens++;
+
+      gainXP(10);
+
+    }
+
+  });
+
+}
+
+
+/* ================= WEB SWING ================= */
+
+function initSwing(){
+
+  swingScore=0;
+
+  document.querySelectorAll(".swingWeb").forEach(x=>x.remove());
+
+}
+
+
+function swing(){
+
+  const anchors=document.querySelectorAll(".anchor");
+
+  if(swingScore>=anchors.length){
+
+    swingScore=1;
+
+    gainXP(120);
+    unlock("node3");
+
+    showPopup(
+      "🕸️ WEB SWING COMPLETE",
+      "You crossed the city without touching the streets.<br><br>WEB AIM is unlocked.",
+      "CONTINUE",
+      ()=>{
+        closePopup();
+        returnMap();
+      }
+    );
+
+    return;
+  }
+
+  const anchor=anchors[swingScore];
+
+  const player=document.getElementById("swingPlayer");
+
+  const rect=anchor.getBoundingClientRect();
+
+  player.style.left=(rect.left/window.innerWidth*100)+"%";
+  player.style.top=(rect.top/window.innerHeight*100)+"%";
+
+  swingScore++;
+
+  gainXP(25);
+
+}
+
+
+/* ================= WEB AIM ================= */
+
+let aimTimer;
+
+function initAim(){
+
+  aimScore=0;
+
+  const world=document.getElementById("aimWorld");
+
+  world.innerHTML="";
+
+  clearInterval(aimTimer);
+
+  spawnTarget();
+
+}
+
+
+function spawnTarget(){
+
+  const world=document.getElementById("aimWorld");
+
+  if(aimScore>=5){
+
+    clearInterval(aimTimer);
+
+    gainXP(150);
+    unlock("node4");
+
+    showPopup(
+      "🎯 TARGETS CLEARED",
+      "Your spider-sense is getting stronger.<br><br>WEB PUZZLE is unlocked.",
+      "CONTINUE",
+      ()=>{
+        closePopup();
+        returnMap();
+      }
+    );
+
+    return;
+  }
+
+  const target=document.createElement("div");
+
+  target.className="target";
+  target.textContent="🕸️";
+
+  target.style.left=(10+Math.random()*80)+"%";
+  target.style.top=(20+Math.random()*60)+"%";
+
+  target.onclick=()=>{
+
+    target.remove();
+
+    aimScore++;
+    tokens++;
+    gainXP(20);
+
+    spawnTarget();
+
+  };
+
+  world.appendChild(target);
+
+}
+
+
+/* ================= PUZZLE ================= */
+
+let puzzleIndex=0;
+
+function initPuzzle(){
+
+  puzzleScore=0;
+  puzzleIndex=0;
+
+  const grid=document.getElementById("puzzleGrid");
+
+  grid.innerHTML="";
+
+  const positions=[
+    [15,20],
+    [55,12],
+    [80,35],
+    [65,70],
+    [30,80],
+    [10,55]
+  ];
+
+  positions.forEach((pos,i)=>{
+
+    const d=document.createElement("button");
+
+    d.className="dot";
+    d.textContent=i+1;
+
+    d.style.left=pos[0]+"%";
+    d.style.top=pos[1]+"%";
+
+    d.onclick=()=>{
+
+      if(i===puzzleIndex){
+
+        d.classList.add("done");
+        puzzleIndex++;
+
+        gainXP(20);
+
+        if(puzzleIndex===positions.length){
+
+          puzzleScore=1;
+
+          gainXP(150);
+
+          unlock("node5");
+
+          showPopup(
+            "🧩 WEB PUZZLE SOLVED",
+            "The web pattern revealed a hidden route through the city.",
+            "NEXT",
+            ()=>{
+              closePopup();
+              returnMap();
+            }
+          );
+
+        }
+
+      }else{
+
+        loseLife();
+
+      }
+
+    };
+
+    grid.appendChild(d);
+
+  });
+
+}
+
+
+/* ================= SAVE CITY ================= */
+
+let coreX=25;
+let coreY=35;
+
+function initSave(){
+
+  saveScore=0;
+
+  coreX=25;
+  coreY=35;
+
+  updateCore();
+
+}
+
+
+function moveCore(){
+
+  coreX+=12;
+  coreY+=5;
+
+  if(coreX>70)coreX=70;
+
+  updateCore();
+
+  gainXP(15);
+
+  if(coreX>=70){
+
+    saveScore=1;
+
+    gainXP(180);
+
+    unlock("node6");
+
+    showPopup(
+      "🏙️ CITY SAVED",
+      "The energy core is safe.<br><br>Something is waiting at the top of the city...",
+      "GO TO FINAL",
+      ()=>{
+        closePopup();
+        returnMap();
+      }
+    );
+
+  }
+
+}
+
+
+function updateCore(){
+
+  const core=document.getElementById("coreItem");
+
+  core.style.left=coreX+"%";
+  core.style.top=coreY+"%";
+
+}
+
+
+/* ================= FINAL ================= */
+
+let finalHits=0;
+
+function initFinal(){
+
+  finalScore=0;
+  finalHits=0;
+
+}
+
+
+function finalHit(){
+
+  finalHits++;
+
+  gainXP(25);
+
+  const core=document.querySelector(".finalCore");
+
+  core.style.transform=
+    `translate(-50%,-50%) scale(${1+finalHits*.08})`;
+
+  if(finalHits>=6){
+
+    finalScore=1;
+
+    gainXP(300);
+
+    setTimeout(showBirthday,500);
+
+  }
+
+}
+
+
+/* ================= LIFE ================= */
+
+function loseLife(){
+
+  lives--;
+  updateHUD();
+
+  if(lives<=0){
+
+    lives=3;
+    updateHUD();
+
+    showPopup(
+      "💥 MISSION FAILED",
+      "Spider-sense needs another try.",
+      "TRY AGAIN",
+      ()=>{
+        closePopup();
+
+        if(currentMission){
+          openMission(currentMission);
+        }
+
+      }
+    );
+
+  }
+
+}
+
+
+/* ================= BIRTHDAY ================= */
+
+function showBirthday(){
+
+  document.querySelectorAll(".mission").forEach(x=>{
+    x.style.display="none";
+  });
+
+  document.getElementById("hud").style.display="none";
+
+  const screen=document.createElement("div");
+
+  screen.className="screen";
+
+  screen.style.zIndex="200";
+
+  screen.innerHTML=`
+
+    <div class="letter">
+
+      <h2>🕷️ MISSION COMPLETE</h2>
+
+      <p>
+happy birthdayyy 🥳🤍 hope you have a really good day today . semoga panjang umur , murah rezeki and everything goes well for you . i hope you get all the happiness you deserve , and semoga tahun ni jadi tahun yang lebih baik for you . enjoy your dayy! 🎂💗
+      </p>
+
+      <br>
+
+      <p style="text-align:center;color:#c90025;font-weight:bold">
+        — from someone who made this whole mission just for you 🕷️🤍
+      </p>
+
+      <br>
+
+      <button class="main-btn" onclick="secretEnding()">
+        UNLOCK SECRET ENDING
+      </button>
+
+    </div>
+  `;
+
+  document.getElementById("game").appendChild(screen);
+
+  confetti();
+
+}
+
+
+/* ================= SECRET ENDING ================= */
+
+function secretEnding(){
+
+  document.querySelectorAll(".screen").forEach(x=>{
+
+    if(x.id!=="start")x.remove();
+
+  });
+
+  const end=document.createElement("div");
+
+  end.className="screen";
+
+  end.style.zIndex="300";
+
+  end.innerHTML=`
+
+    <div class="card">
+
+      <div class="spider">🕷️</div>
+
+      <h1>
+        <span class="red">SECRET</span> ENDING
+      </h1>
+
+      <p class="subtitle">
+        you thought the mission was about saving the city...
+        <br><br>
+        but actually,
+        <br>
+        it was just an excuse to make something special for you.
+        <br><br>
+        happy birthday, danish 🤍
+      </p>
+
+      <button class="main-btn" onclick="location.reload()">
+        PLAY AGAIN
+      </button>
+
+    </div>
+  `;
+
+  document.getElementById("game").appendChild(end);
+
+  confetti();
+
+}
+
+
+/* ================= CONFETTI ================= */
+
+function confetti(){
+
+  for(let i=0;i<90;i++){
+
+    const c=document.createElement("div");
+
+    c.className="confetti";
+
+    c.style.left=Math.random()*100+"%";
+    c.style.top="-20px";
+
+    c.style.background=
+      ["#e60026","#1479ff","#fff","#ffd43b"][Math.floor(Math.random()*4)];
+
+    c.style.animationDelay=(Math.random()*2)+"s";
+
+    document.getElementById("game").appendChild(c);
+
+    setTimeout(()=>c.remove(),5000);
+
+  }
+
+}
+
+
+/* ================= TOUCH WEB AIM ================= */
+
+document.addEventListener("pointermove",e=>{
+
+  if(currentMission!=="aim")return;
+
+  let cross=document.querySelector(".crosshair");
+
+  if(!cross){
+
+    cross=document.createElement("div");
+
+    cross.className="crosshair";
+
+    document.getElementById("aimWorld").appendChild(cross);
+
+  }
+
+  cross.style.left=e.clientX+"px";
+  cross.style.top=e.clientY+"px";
+
+});
+
+
+/* ================= KEYBOARD ================= */
+
+document.addEventListener("keydown",e=>{
+
+  if(currentMission==="run"){
+
+    if(e.code==="Space")jump();
+    if(e.code==="ArrowRight")dash();
+
+  }
+
+  if(currentMission==="swing"){
+
+    if(e.code==="Space")swing();
+
+  }
+
+});
+
+</script>
+
+</body>
+</html>
